@@ -2,11 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import Header from "./components/Header";
+import Header from "./components/header";
+import "./fonts/ITCErasStd-Light.otf";
+import Body from "./components/homeBody";
 
 ReactDOM.render(
   <React.StrictMode>
     <Header />
+    <Body />
   </React.StrictMode>,
   document.getElementById("root")
 );
