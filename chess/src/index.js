@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 import Header from "./components/header";
 import "./fonts/ITCErasStd-Light.otf";
 import Body from "./components/homeBody";
+//import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
