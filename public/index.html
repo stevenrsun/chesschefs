@@ -29,15 +29,34 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-analytics.js"></script>
+
+   <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-database.js"></script>
+   <script>
+    // TODO: Replace the following with your app's Firebase project configuration
+    var firebaseConfig = {
+    apiKey: "AIzaSyDKm_j6-ortLi8t9B_WnqkgfpAuSDjO-o4",
+    authDomain: "chess-bros.firebaseapp.com",
+    databaseURL: "https://chess-bros.firebaseio.com",
+    projectId: "chess-bros",
+    storageBucket: "chess-bros.appspot.com",
+    messagingSenderId: "7559196477",
+    appId: "1:7559196477:web:3beb443d38fbf1eb151f54",
+    measurementId: "G-PGQPFWE10X"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  </script>
+
   </body>
 </html>

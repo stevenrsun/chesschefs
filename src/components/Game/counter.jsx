@@ -1,12 +1,28 @@
 import React, { Component } from "react";
+import firebase from 'firebase';
 
 class Counter extends Component {
-  state = {
+  constructor(){
+    super()
+
+    this.database = firebase.database();
+    this.counter = this.database.ref().child('TEST_COUNTER');
+
+    this.state = {
       count: 0
-  };
+    }
+  }
+
+  componentDidMount() {
+    this.counter.on('value', snap => {
+      this.setState({
+        count: snap.val()
+      })
+    })
+  }
 
   incrementCounter = () => {
-      this.setState(state => ({count: this.state.count + 1}));
+      this.counter.set(this.state.count + 1);
   }
 
   render() {
