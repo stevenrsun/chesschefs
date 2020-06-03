@@ -29,9 +29,6 @@ class Counter extends Component {
     })
   }
 
-  handleLoad() {
-    this.loads.set(this.state.loads + 1);
-   }
 
   incrementCounter = () => {
       this.counter.set(this.state.count + 1);
