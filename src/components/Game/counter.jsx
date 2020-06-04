@@ -7,21 +7,13 @@ class Counter extends Component {
 
     this.database = firebase.database();
     this.counter = this.database.ref().child('TEST_COUNTER');
-    this.loads = this.database.ref().child('LOADS');
 
     this.state = {
-      count: 0,
-      loads: 0
+      count: 0
     }
   }
 
   componentDidMount() {
-    this.loads.on('value', snap => {
-      this.setState({
-        loads: snap.val()
-      })
-    })
-    this.loads.set(this.state.loads + 1);
     this.counter.on('value', snap => {
       this.setState({
         count: snap.val()
@@ -38,7 +30,6 @@ class Counter extends Component {
     return (
         <React.Fragment>
             <h1 className="head">This counter has been incremented: {this.state.count} times</h1>
-            <div>This page has been loaded: {this.state.loads} times</div>
             <button type="button" onClick={this.incrementCounter} class="btn btn-primary">Increment</button>
         </React.Fragment>
     );
