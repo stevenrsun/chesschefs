@@ -25,6 +25,24 @@ code {
   margin-top: 0px;
 }
 
+.navhead {
+  font-family: Eras;
+  color: white;
+  font-size: 50px;
+  padding: 30px;
+}
+
+.navbackground {
+  background-color: black;
+}
+
+.nav {
+  font-family: Eras;
+  color: white;
+  font-size: 20px;
+  padding: 50px;
+}
+
 .undraggable {
   user-drag: none;
   user-select: none;

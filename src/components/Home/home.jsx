@@ -7,7 +7,6 @@ class Home extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1 className="head">BestChess</h1>
         <a href="https://www.google.com/">
           <img className="undraggable chessboard" src={chessboard} alt="" />
         </a>
