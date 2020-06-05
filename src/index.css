@@ -30,17 +30,20 @@ code {
   color: white;
   font-size: 50px;
   padding: 30px;
+  margin-left: -30px;
 }
 
 .navbackground {
   background-color: black;
+  box-shadow: 0px 40px 50px grey;
 }
 
 .nav {
   font-family: Eras;
   color: white;
   font-size: 20px;
-  padding: 50px;
+  padding: 55px;
+  margin-left: 40px;
 }
 
 .undraggable {

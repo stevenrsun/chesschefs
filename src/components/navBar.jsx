@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
 
 class NavBar extends Component {
-    state = {};
-    render() {
-        return (
-            <nav class="navbackground navbar">
-                <ul class="navbar-nav ml-auto justify-content-right" style={{listStyleType: "none"}}>
-                    <li class="navhead">
-                        BestChess
-                    </li>
-                    <li class="nav">
-                        Sign In
-                    </li>
-                </ul>
-            </nav>
-        );
-    }
+  state = {};
+  render() {
+    return (
+      <nav className="navbackground navbar">
+        <ul
+          className="navbar-nav ml-auto justify-content-right"
+          style={{ listStyleType: "none" }}
+        >
+          <li className="navhead">BestChess</li>
+          <li className="nav">
+            <NavLink to="/login"> TEST </NavLink>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
 }
 
 export default NavBar;

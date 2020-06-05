@@ -4,11 +4,12 @@ import "./App.css";
 import "./fonts/ITCErasStd-Light.otf";
 import Home from "./components/Home/home";
 import Counter from "./components/Game/counter";
-import {BrowserRouter, Route} from 'react-router-dom';
+import { BrowserRouter, Route } from "react-router-dom";
 import NavBar from "./components/navBar";
+import login from "./components/login";
 
 class App extends React.Component {
-  render () {
+  render() {
     return (
       <React.Fragment>
         <NavBar />
@@ -16,10 +17,9 @@ class App extends React.Component {
           <div>
             <Route exact path="/" component={Home} />
             <Route path="/Game" component={Counter} />
-            <Route path="/signin" component={Counter}/>
+            <Route path="/login" component={login} />
           </div>
         </BrowserRouter>
-        
       </React.Fragment>
     );
   }
