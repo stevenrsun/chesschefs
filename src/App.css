@@ -28,6 +28,11 @@
   color: #61dafb;
 }
 
+.navbar-link, .navbar-link:visited, .navbar-link:link, .navbar-link:active, .navbar-link:hover{
+  color: white;
+  text-decoration: none;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

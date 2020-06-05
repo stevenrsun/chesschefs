@@ -4,21 +4,21 @@ import "./App.css";
 import "./fonts/ITCErasStd-Light.otf";
 import Home from "./components/Home/home";
 import Counter from "./components/Game/counter";
-import { BrowserRouter, Route } from "react-router-dom";
-import NavBar from "./components/navBar";
-import login from "./components/login";
+import { BrowserRouter, Route, NavLink, Switch } from "react-router-dom";
+import Login from "./components/login";
+import NavBar from "./components/NavBar/navBar";
 
 class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <NavBar />
         <BrowserRouter>
-          <div>
+        <NavBar/>
+          <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/Game" component={Counter} />
-            <Route path="/login" component={login} />
-          </div>
+            <Route path="/login" component={Login} />
+          </Switch>
         </BrowserRouter>
       </React.Fragment>
     );
