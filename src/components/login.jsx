@@ -10,7 +10,29 @@ class Login extends Component {
     };
   }
   render() {
-    return <p>sign in</p>;
+    return (
+      <form className="testForm">
+        <div className="container">
+          <label className> Username </label>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            name="username"
+            required
+          />
+          <br />
+          <label> Password</label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            name="password"
+            required
+          />
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+    );
   }
 }
 

@@ -71,3 +71,45 @@ code {
   font-family: "Eras";
   src: local("Eras"), url(./fonts/ITCErasStd-Light.otf);
 }
+
+.testForm {
+  border: 3px solid #f1f1f1;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 150px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-left: 110px;
+}
+
+label {
+  margin-left: 110px;
+}
+
+.container {
+  padding: 16px;
+}
+
+button[type="submit"] {
+  background-color: #ffffff;
+  margin-top: 20px;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  background-image: linear-gradient(rgb(128, 128, 128), rgb(145, 145, 145));
+}
+
+button:hover {
+  opacity: 0.8;
+}
