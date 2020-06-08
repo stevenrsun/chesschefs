@@ -4,26 +4,29 @@ import "./fonts/ITCErasStd-Light.otf";
 import Home from "./components/Home/home";
 import Counter from "./components/Game/counter";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Login from "./components/login";
+import SignInPage from "./components/Authentication/signIn";
+import SignUp from "./components/Authentication/signUp";
 import NavBar from "./components/NavBar/navBar";
-import SignUp from "./components/signUp";
+import { withFirebase } from "./components/FireBase";
+import { withAuthentication } from "./components/Session";
 
 class App extends React.Component {
+
   render() {
     return (
       <React.Fragment>
-        <BrowserRouter>
-        <NavBar/>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/Game" component={Counter} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={SignUp} />
-          </Switch>
-        </BrowserRouter>
+          <BrowserRouter>
+          <NavBar/>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/Game" component={Counter} />
+              <Route path="/login" component={SignInPage} />
+              <Route path="/signup" component={SignUp} />
+            </Switch>
+          </BrowserRouter>
       </React.Fragment>
     );
   }
 }
 
-export default App;
+export default withAuthentication(App);
