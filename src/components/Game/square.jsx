@@ -11,7 +11,7 @@ const Square = ({isLight}) => (
 class LightSquare extends Component {
     state = { 
         piece: 0,
-        pieceMap: [black_pawn]
+        pieceMap: [light_square, black_pawn]
      }
     styles = {
         container: {
@@ -45,7 +45,7 @@ class LightSquare extends Component {
 class DarkSquare extends Component {
     state = { 
         piece: 0,
-        pieceMap: [black_pawn]
+        pieceMap: [dark_square,black_pawn]
     }
     styles = {
         container: {

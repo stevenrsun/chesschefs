@@ -7,15 +7,50 @@ class Chessboard extends Component {
         board: {
             width: '512px',
             height: '512px'
+        },
+        square: {
+            width: '64px',
+            height: '64px'
         }
     }
     render() { 
         return ( 
-            <div class="row-no-gutters mx-0">
-                <div class="col-sm-1"><Square isLight={true}/><Square isLight={false}/></div>
-                <div class="col-sm-1"><Square isLight={false}/></div>
-                <div class="col-sm-1"><Square isLight={true}/></div>
-            </div> 
+            <div class="container ml-4">
+                <div class="row" style={this.styles.board}>
+                    <div class="col-sm-1 chess-square" style={this.styles.square}>
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />                  
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                        <Square isLight={true} /><Square isLight={false} /><Square isLight={true} /><Square isLight={false} />
+                    </div>
+                    <div class="col-sm-1" style={this.styles.square}>
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                        <Square isLight={false} /><Square isLight={true} /><Square isLight={false} /><Square isLight={true} />
+                    </div>
+                </div> 
+            </div>
          );
     }
 }

@@ -13,12 +13,6 @@ code {
     monospace;
 }
 
-.flexbox-container {
-  display: flex;
-  flex-direction: row;
-}
-
-
 .head {
   font-family: Eras;
   color: white;
