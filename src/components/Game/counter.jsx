@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import firebase from "firebase";
+import Chessboard from "./chessboard";
 
 class Counter extends Component {
   constructor() {
@@ -38,6 +39,9 @@ class Counter extends Component {
         >
           Increment
         </button>
+
+        <Chessboard/>
+
       </React.Fragment>
     );
   }
