@@ -11,19 +11,11 @@ class Chessboard extends Component {
     }
     render() { 
         return ( 
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        asdf
-                    </div>
-                    <div class="col">
-                        asdf
-                    </div>
-                    <div class="col">
-                        asdf
-                    </div>
-                </div>
-            </div>
+            <div class="row-no-gutters mx-0">
+                <div class="col-sm-1"><Square isLight={true}/><Square isLight={false}/></div>
+                <div class="col-sm-1"><Square isLight={false}/></div>
+                <div class="col-sm-1"><Square isLight={true}/></div>
+            </div> 
          );
     }
 }
