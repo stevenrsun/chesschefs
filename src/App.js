@@ -7,7 +7,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import SignInPage from "./components/Authentication/signIn";
 import SignUp from "./components/Authentication/signUp";
 import NavBar from "./components/NavBar/navBar";
-import { withFirebase } from "./components/FireBase";
 import { withAuthentication } from "./components/Session";
 
 class App extends React.Component {

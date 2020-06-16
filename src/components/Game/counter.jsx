@@ -1,8 +1,19 @@
 import React, { Component } from "react";
 import firebase from "firebase";
 import Chessboard from "./chessboard";
+import { AuthUserContext } from '../Session';
 
-class Counter extends Component {
+const Counter = ({authUser}) => (
+  <div>
+    <AuthUserContext.Consumer>
+            {authUser =>
+                authUser ? <CounterWithUID uid={authUser.uid}/> : <CounterWithUID uid={0}/>
+            }
+    </AuthUserContext.Consumer>
+  </div>
+)
+
+class CounterWithUID extends Component {
   constructor() {
     super();
 
@@ -10,7 +21,7 @@ class Counter extends Component {
     this.counter = this.database.ref().child("TEST_COUNTER");
 
     this.state = {
-      count: 0,
+      count: 0
     };
   }
 
@@ -29,6 +40,7 @@ class Counter extends Component {
   render() {
     return (
       <React.Fragment>
+        <h1>{this.props.uid}</h1>
         <h1 style={{ marginTop: 50 }}>
           This counter has been incremented: {this.state.count} times
         </h1>
