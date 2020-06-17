@@ -54,7 +54,7 @@ class CounterWithUID extends Component {
       this.setState({
         whiteId: snapshot.val(),
       });
-      if(snapshot.val() === "")
+      if(snapshot.val() === 0)
         this.white.set(this.props.uid)
     });
 
@@ -62,7 +62,7 @@ class CounterWithUID extends Component {
       this.setState({
         blackId: snapshot.val(),
       });
-      if(snapshot.val() === "" && this.state.whiteId != "" && this.state.whiteId != this.props.uid)
+      if(snapshot.val() === 0 && this.state.whiteId != 0 && this.state.whiteId != this.props.uid)
         this.black.set(this.props.uid)
     });
   }
