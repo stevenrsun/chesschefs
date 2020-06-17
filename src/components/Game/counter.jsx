@@ -50,23 +50,21 @@ class CounterWithUID extends Component {
       });
     });
 
-    this.white.on("value", (snap) => {
+    this.white.on("value", (snapshot) => {
       this.setState({
-        whiteId: snap.val(),
+        whiteId: snapshot.val(),
       });
+      if(snapshot.val() === "")
+        this.white.set(this.props.uid)
     });
 
-    this.black.on("value", (snap) => {
+    this.black.on("value", (snapshot) => {
       this.setState({
-        blackId: snap.val(),
+        blackId: snapshot.val(),
       });
+      if(snapshot.val() === "" && this.state.whiteId != "" && this.state.whiteId != this.props.uid)
+        this.black.set(this.props.uid)
     });
-
-    if (this.white === "") {
-      this.white.set(this.props.uid);
-    } else if(this.black === ""){
-      this.black.set(this.props.uid);
-    }
   }
 
   incrementCounterOne = () => {
