@@ -2,16 +2,27 @@ import React, { Component } from 'react';
 import { ImageBackground, View } from "react-native";
 import light_square from "../pictures/chess_square_light.png";
 import dark_square from "../pictures/chess_square_dark.png";
-import black_pawn from "../pictures/black_pawn_test.png";
+import white_pawn from "../pictures/Pieces/WPawn.png";
+import white_knight from "../pictures/Pieces/WKnight.png";
+import white_bishop from "../pictures/Pieces/WBishop.png";
+import white_rook from "../pictures/Pieces/WRook.png";
+import white_queen from "../pictures/Pieces/WQueen.png";
+import white_king from "../pictures/Pieces/WKing.png";
+import black_pawn from "../pictures/Pieces/BPawn.png";
+import black_knight from "../pictures/Pieces/BKnight.png";
+import black_bishop from "../pictures/Pieces/BBishop.png";
+import black_rook from "../pictures/Pieces/BRook.png";
+import black_queen from "../pictures/Pieces/BQueen.png";
+import black_king from "../pictures/Pieces/BKing.png";
 
-const Square = ({isLight}) => (
-    isLight ? <LightSquare/> : <DarkSquare/>
+const Square = ({isLight, onClick, coords}) => (
+    isLight ? <LightSquare onClick={onClick} coords={coords}/> : <DarkSquare onClick={onClick} coords={coords}/>
 )
 
 class LightSquare extends Component {
     state = { 
         piece: 0,
-        pieceMap: [light_square, black_pawn]
+        pieceMap: [light_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
      }
     styles = {
         container: {
@@ -27,17 +38,20 @@ class LightSquare extends Component {
             alignItems: "center"
         },
         piece: {
-            height: '45px',
-            width: '45px'
+            height: '64px',
+            width: '64px'
         }
     }
+
     render() { 
         return ( 
-            <View style={this.styles.container}>
-                <ImageBackground source={light_square} style={this.styles.image}>
-                    <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
-                </ImageBackground>
-            </View>
+            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
+                <View style={this.styles.container}>
+                    <ImageBackground source={light_square} style={this.styles.image}>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                    </ImageBackground>
+                </View>
+            </a>
          );
     }
 }
@@ -45,7 +59,7 @@ class LightSquare extends Component {
 class DarkSquare extends Component {
     state = { 
         piece: 0,
-        pieceMap: [dark_square,black_pawn]
+        pieceMap: [dark_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
     }
     styles = {
         container: {
@@ -65,13 +79,16 @@ class DarkSquare extends Component {
             width: '45px'
         }
     }
+
     render() { 
         return ( 
-            <View style={this.styles.container}>
-                <ImageBackground source={dark_square} style={this.styles.image}>
-                    <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
-                </ImageBackground>
-            </View>
+            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
+                <View style={this.styles.container}>
+                    <ImageBackground source={dark_square} style={this.styles.image}>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                    </ImageBackground>
+                </View>
+            </a>
          );
     }
 }
