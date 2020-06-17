@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import firebase from "firebase";
+//import firebase from "firebase";
+import {withFirebase} from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 
@@ -8,9 +9,9 @@ const Counter = ({ authUser }) => (
     <AuthUserContext.Consumer>
       {(authUser) =>
         authUser ? (
-          <CounterWithUID uid={authUser.uid} />
+          <CounterFinal uid={authUser.uid} />
         ) : (
-          <CounterWithUID uid={0} />
+          <CounterFinal uid={0} />
         )
       }
     </AuthUserContext.Consumer>
@@ -18,19 +19,21 @@ const Counter = ({ authUser }) => (
 );
 
 class CounterWithUID extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    this.database = firebase.database();
-    this.counterOne = this.database.ref().child("TEST_COUNTER_ONE");
-    this.counterTwo = this.database.ref().child("TEST_COUNTER_TWO");
+    this.database = this.props.firebase.db;
+    this.counterOne = this.database.ref('game_example').child("white_counter");
+    this.counterTwo = this.database.ref('game_example').child("black_counter");
+    this.white = this.database.ref('game_example').child("white_id");
+    this.black = this.database.ref('game_example').child("black_id");
 
     this.state = {
       countOne: 0,
       countTwo: 0,
 
-      firstUID: "",
-      secondUID: "",
+      whiteId: "",
+      blackId: "",
     };
   }
 
@@ -47,21 +50,33 @@ class CounterWithUID extends Component {
       });
     });
 
-    if (this.state.firstUID === "") {
-      this.state.firstUID = this.props.uid;
-    } else {
-      this.state.secondUID = this.props.uid;
+    this.white.on("value", (snap) => {
+      this.setState({
+        whiteId: snap.val(),
+      });
+    });
+
+    this.black.on("value", (snap) => {
+      this.setState({
+        blackId: snap.val(),
+      });
+    });
+
+    if (this.state.whiteId === "") {
+      this.white.set(this.props.uid);
+    } else if(this.state.blackId === ""){
+      this.black.set(this.props.uid);
     }
   }
 
   incrementCounterOne = () => {
-    if (this.props.uid === this.state.firstUID) {
+    if (this.props.uid === this.state.whiteId) {
       this.counterOne.set(this.state.countOne + 1);
     }
   };
 
   incrementCounterTwo = () => {
-    if (this.props.uid === this.state.secondUID) {
+    if (this.props.uid === this.state.blackId) {
       this.counterTwo.set(this.state.countTwo + 1);
     }
   };
@@ -71,14 +86,14 @@ class CounterWithUID extends Component {
       <React.Fragment>
         <h1>{this.props.uid}</h1>
         <h1 style={{ marginTop: 50 }}>
-          firstUID: {this.state.firstUID}
+          whiteId: {this.state.whiteId}
           <br />
           your UID: {this.props.uid}
           <br />
           counterOne has been incremented: {this.state.countOne} times
         </h1>
         <h1 style={{ marginTop: 50 }}>
-          secondUID: {this.state.secondUID}
+          blackId: {this.state.blackId}
           <br />
           your UID: {this.props.uid}
           <br />
@@ -105,5 +120,7 @@ class CounterWithUID extends Component {
     );
   }
 }
+
+const CounterFinal = withFirebase(CounterWithUID);
 
 export default Counter;

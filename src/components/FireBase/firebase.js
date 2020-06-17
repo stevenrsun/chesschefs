@@ -1,5 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
   const config = {
     apiKey: "AIzaSyDKm_j6-ortLi8t9B_WnqkgfpAuSDjO-o4",
@@ -17,6 +18,7 @@ import 'firebase/auth';
           app.initializeApp(config);
 
           this.auth = app.auth();
+          this.db = app.database();
       }
 
       doCreateUserWithEmailAndPassword = (email, password) =>
