@@ -62,9 +62,9 @@ class CounterWithUID extends Component {
       });
     });
 
-    if (this.state.whiteId === "") {
+    if (this.white === "") {
       this.white.set(this.props.uid);
-    } else if(this.state.blackId === ""){
+    } else if(this.black === ""){
       this.black.set(this.props.uid);
     }
   }
