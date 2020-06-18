@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ImageBackground, View } from "react-native";
+import { withFirebase } from "../FireBase";
 import light_square from "../pictures/chess_square_light.png";
 import dark_square from "../pictures/chess_square_dark.png";
 import white_pawn from "../pictures/Pieces/WPawn.png";
@@ -16,14 +17,21 @@ import black_queen from "../pictures/Pieces/BQueen.png";
 import black_king from "../pictures/Pieces/BKing.png";
 
 const Square = ({isLight, onClick, coords}) => (
-    isLight ? <LightSquare onClick={onClick} coords={coords}/> : <DarkSquare onClick={onClick} coords={coords}/>
+    isLight ? <LightSquareFinal onClick={onClick} coords={coords}/> : <DarkSquareFinal onClick={onClick} coords={coords}/>
 )
 
 class LightSquare extends Component {
-    state = { 
-        piece: 0,
-        pieceMap: [light_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
-     }
+    constructor(props){
+        super(props);
+
+        this.database = this.props.firebase.db;
+        this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
+
+        this.state = { 
+            piece: 0,
+            pieceMap: [light_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
+        }
+    }
     styles = {
         container: {
             flex: 1,
@@ -43,6 +51,14 @@ class LightSquare extends Component {
         }
     }
 
+    componentDidMount() {
+        this.node.on("value", (snap) => {
+            this.setState({
+                piece: snap.val()
+            });
+        });
+    }
+
     render() { 
         return ( 
             <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
@@ -57,9 +73,16 @@ class LightSquare extends Component {
 }
 
 class DarkSquare extends Component {
-    state = { 
-        piece: 0,
-        pieceMap: [dark_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
+    constructor(props){
+        super(props);
+
+        this.database = this.props.firebase.db;
+        this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
+        
+        this.state = { 
+            piece: 0,
+            pieceMap: [dark_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
+        }
     }
     styles = {
         container: {
@@ -75,11 +98,19 @@ class DarkSquare extends Component {
             alignItems: "center"
         },
         piece: {
-            height: '45px',
-            width: '45px'
+            height: '64px',
+            width: '64px'
         }
     }
 
+    componentDidMount() {
+        this.node.on("value", (snap) => {
+            this.setState({
+                piece: snap.val()
+            });
+        });
+    }
+    
     render() { 
         return ( 
             <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
@@ -93,4 +124,7 @@ class DarkSquare extends Component {
     }
 }
  
+const LightSquareFinal = withFirebase(LightSquare);
+const DarkSquareFinal = withFirebase(DarkSquare);
+
 export default Square;

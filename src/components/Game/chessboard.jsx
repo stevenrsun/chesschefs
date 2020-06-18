@@ -2,7 +2,13 @@ import React, { Component } from "react";
 import Square from "./square";
 
 class Chessboard extends Component {
-  state = {};
+  constructor(props){
+    super(props);
+
+    this.state = {
+      
+    };
+  }
   styles = {
     board: {
       width: "512px",
