@@ -20,8 +20,22 @@ class Chessboard extends Component {
     },
   };
 
-  handleClick = (coords, e) => {
+  handleClick = (coords, piece, e) => {
     e.preventDefault();
+    if(piece === 0)
+      console.log("blank square, can't move")
+    else if(piece <= 6 && piece >= 1){
+      if(this.props.uid == this.props.whiteId)
+        console.log("can move")
+      else
+        console.log("can't move")
+    }
+    else if(piece <= 12 && piece >= 6){
+      if(this.props.uid == this.props.blackId)
+        console.log("can move")
+      else
+        console.log("can't move")
+    }
     console.log("clicked on a square: " + coords[0] + ", " + coords[1])
   }
 

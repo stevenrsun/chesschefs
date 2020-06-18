@@ -61,7 +61,7 @@ class LightSquare extends Component {
 
     render() { 
         return ( 
-            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
+            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, this.state.piece, e)}>
                 <View style={this.styles.container}>
                     <ImageBackground source={light_square} style={this.styles.image}>
                         <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
@@ -113,7 +113,7 @@ class DarkSquare extends Component {
     
     render() { 
         return ( 
-            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, e)}>
+            <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, this.state.piece, e)}>
                 <View style={this.styles.container}>
                     <ImageBackground source={dark_square} style={this.styles.image}>
                         <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>

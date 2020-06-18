@@ -113,7 +113,7 @@ class CounterWithUID extends Component {
           Increment Button Two
         </button>
 
-        <Chessboard />
+        <Chessboard uid={this.props.uid} whiteId={this.state.whiteId} blackId={this.state.blackId}/>
       </React.Fragment>
     );
   }
