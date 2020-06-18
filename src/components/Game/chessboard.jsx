@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import Square from "./square";
+import { withFirebase } from "../FireBase";
 
-class Chessboard extends Component {
+const Chessboard = ({uid, whiteId, blackId}) => (<ChessboardFinal uid={uid} whiteId={whiteId} blackId={blackId}/>)
+
+class ChessboardBase extends Component {
   constructor(props){
     super(props);
 
+    this.database = this.props.firebase.db;
+    this.board = this.database.ref("games/game-ID/board")
+    this.mover = this.database.ref("games/game-ID/current_mover")
+    this.piece = this.database.ref("games/game-ID/current_piece")
+
     this.state = {
-      
+      currPiece: 0,
+      board: [],
+      movePool: [],
+      legalSquares: [],
+      sourceCoords: [],
+      currentMover: "white"
     };
   }
   styles = {
@@ -20,29 +33,152 @@ class Chessboard extends Component {
     },
   };
 
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+    this.board.on("value", (snap) => {
+      this.setState({board: snap.val()})
+    })
+    this.mover.on("value", (snap) => {
+      this.setState({currentMover: snap.val()})
+    })
+    this.piece.on("value", (snap) => {
+      this.setState({currPiece: snap.val()})
+    })
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  setWrapperRef = (node) => {
+    this.wrapperRef = node;
+  }
+
+  handleClickOutside = (event) => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      console.log("clicked outside board")
+      this.setState({currPiece: 0})
+    }
+  }
+
   handleClick = (coords, piece, e) => {
     e.preventDefault();
     if(piece === 0)
       console.log("blank square, can't move")
-    else if(piece <= 6 && piece >= 1){
-      if(this.props.uid == this.props.whiteId)
-        console.log("can move")
-      else
-        console.log("can't move")
+    // pick up a piece if no piece picked up currently
+    else if(this.state.currPiece === 0){
+      // white move
+      if(piece <= 6 && piece >= 1 && this.state.currentMover === "white"){
+        if(this.props.uid === this.props.whiteId){
+          console.log("can move")
+          this.setState({currPiece: piece}); // update picked up piece
+          this.setState({sourceCoords: coords}); // remember where piece was picked up
+          this.setLegalSquares(coords, piece); // calculate legal moves
+        }
+        else
+          console.log("can't move")
+      }
+
+      // black move
+      else if(piece <= 12 && piece >= 6 && this.state.currentMover === "black"){
+        if(this.props.uid === this.props.blackId){
+          console.log("can move")
+          this.setState({currPiece: piece}); // update picked up piece
+          this.setState({sourceCoords: coords}); // remember where piece was picked up
+          this.setLegalSquares(coords, piece); // calculate legal moves
+        }
+        else
+          console.log("can't move")
+      }
     }
-    else if(piece <= 12 && piece >= 6){
-      if(this.props.uid == this.props.blackId)
-        console.log("can move")
-      else
-        console.log("can't move")
+
+    // if piece is currently picked up, check if clicked square is a legal destination
+    // move if so, drop piece if not
+    if(this.state.currPiece !== 0){
+      this.handleMove(coords);
     }
     console.log("clicked on a square: " + coords[0] + ", " + coords[1])
+  }
+
+  handleMove = (coords) => {
+    console.log("inside handle move, coords are " + coords)
+    if(this.moveIsLegal(coords)){
+      this.database.ref("games/game-ID/board/" + coords[0] + "/" + coords[1]).set(this.state.currPiece);
+      this.database.ref("games/game-ID/board/" + this.state.sourceCoords[0] + "/" + this.state.sourceCoords[1]).set(0);
+      this.setState({currPiece: 0})
+      if(this.state.currentMover === "white")
+        this.mover.set("black")
+      else
+        this.mover.set("white")
+    }
+    else{
+      console.log("not a legal square")
+      this.setState({currPiece: 0})
+      this.setState({sourceCoords: [-1, -1]})
+    }
+  }
+
+  moveIsLegal = (coords) => {
+    var i, j, current;
+    for(i = 0; i < this.state.legalSquares.length; i++){
+      current = this.state.legalSquares[i];
+      if(coords[0] == current[0] && coords[1] == current[1])
+        return true;
+    }
+    return false;
+  }
+
+  setLegalSquares = (coords, piece) => {
+    if(piece === 0)
+      return
+    // knight move
+    if(piece === 2 || piece === 8){
+      // generate all possible squares (before checking move legality)
+      this.setState({movePool: [
+        [coords[0] - 2, coords[1] + 1], 
+        [coords[0] - 2, coords[1] - 1], 
+        [coords[0] + 2, coords[1] + 1], 
+        [coords[0] + 2, coords[1] - 1], 
+        [coords[0] + 1, coords[1] + 2], 
+        [coords[0] - 1, coords[1] + 2], 
+        [coords[0] + 1, coords[1] - 2], 
+        [coords[0] - 1, coords[1] - 2]
+      ]},
+      this.setLegalSquaresHelper)
+    }
+    else
+      console.log("no piece to determine moveset for")
+  }
+
+  setLegalSquaresHelper = () => {
+    var i;
+    var squares = []; // track legal squares here
+    // check legality and update legal squares 
+    for (i = 0; i < this.state.movePool.length; i++){
+      if((this.state.movePool[i][0] >= 0 && this.state.movePool[i][0] <= 7 && this.state.movePool[i][1] >= 0 && this.state.movePool[i][1] <= 7)){ // check within bounds
+        var r = this.state.movePool[i][0];
+        var c = this.state.movePool[i][1]; 
+        console.log(r + " " + c)
+        // if white move, check landing spot is not white piece or black king
+        if(this.state.currentMover === "white" && (this.state.board[r][c] === 0 || this.state.board[r][c] >= 7) && this.state.board[r][c] !== 12 ){
+          squares.push([r,c]);
+        }
+        // if black move, check landing spot is not black piece or white king
+        else if(this.state.currentMover === "black" && (this.state.board[r][c] <= 6) && this.state.board[r][c] !== 12 ){
+          squares.push([r,c]);
+        }
+      }
+          
+    }
+    this.setState({legalSquares: squares}, () => {console.log(this.state.legalSquares)});
   }
 
   render() {
     return (
       <div class="container ml-4">
-        <div class="row" style={this.styles.board}>
+        <h1>{this.state.currPiece}</h1>
+        <h1>{this.state.legalSquares[0]}</h1>
+        <div class="row" style={this.styles.board} ref={this.setWrapperRef}>
           <div class="col-sm-1" style={this.styles.square}>
             <Square isLight={true} onClick={this.handleClick} coords={[0,0]}/>
             <Square isLight={false} onClick={this.handleClick} coords={[1,0]}/>
@@ -128,5 +264,7 @@ class Chessboard extends Component {
     );
   }
 }
+
+const ChessboardFinal = withFirebase(ChessboardBase);
 
 export default Chessboard;
