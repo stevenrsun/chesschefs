@@ -134,47 +134,12 @@ class ChessboardBase extends Component {
       return
     // knight move
     if(piece === 2 || piece === 8){
-      // generate all possible squares (before checking move legality)
-      /*this.setState({movePool: [
-        [coords[0] - 2, coords[1] + 1], 
-        [coords[0] - 2, coords[1] - 1], 
-        [coords[0] + 2, coords[1] + 1], 
-        [coords[0] + 2, coords[1] - 1], 
-        [coords[0] + 1, coords[1] + 2], 
-        [coords[0] - 1, coords[1] + 2], 
-        [coords[0] + 1, coords[1] - 2], 
-        [coords[0] - 1, coords[1] - 2]
-      ]},
-      this.setLegalSquaresHelper)*/
       var color = piece === 2 ? "white" : "black";
       var legalSquares = moveCalc.calculateKnightMoves(coords, color, this.state.board);
       this.setState({legalSquares: legalSquares});
     }
     else
       console.log("no piece to determine moveset for")
-  }
-
-  setLegalSquaresHelper = () => {
-    var i;
-    var squares = []; // track legal squares here
-    // check legality and update legal squares 
-    for (i = 0; i < this.state.movePool.length; i++){
-      if((this.state.movePool[i][0] >= 0 && this.state.movePool[i][0] <= 7 && this.state.movePool[i][1] >= 0 && this.state.movePool[i][1] <= 7)){ // check within bounds
-        var r = this.state.movePool[i][0];
-        var c = this.state.movePool[i][1]; 
-        console.log(r + " " + c)
-        // if white move, check landing spot is not white piece or black king
-        if(this.state.currentMover === "white" && (this.state.board[r][c] === 0 || this.state.board[r][c] >= 7) && this.state.board[r][c] !== 12 ){
-          squares.push([r,c]);
-        }
-        // if black move, check landing spot is not black piece or white king
-        else if(this.state.currentMover === "black" && (this.state.board[r][c] <= 6) && this.state.board[r][c] !== 12 ){
-          squares.push([r,c]);
-        }
-      }
-          
-    }
-    this.setState({legalSquares: squares}, () => {console.log(this.state.legalSquares)});
   }
 
   render() {
