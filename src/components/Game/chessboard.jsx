@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Square from "./square";
 import { withFirebase } from "../FireBase";
+import * as moveCalc from "./moveCalculator.js";
 
 const Chessboard = ({uid, whiteId, blackId}) => (<ChessboardFinal uid={uid} whiteId={whiteId} blackId={blackId}/>)
 
@@ -134,7 +135,7 @@ class ChessboardBase extends Component {
     // knight move
     if(piece === 2 || piece === 8){
       // generate all possible squares (before checking move legality)
-      this.setState({movePool: [
+      /*this.setState({movePool: [
         [coords[0] - 2, coords[1] + 1], 
         [coords[0] - 2, coords[1] - 1], 
         [coords[0] + 2, coords[1] + 1], 
@@ -144,7 +145,10 @@ class ChessboardBase extends Component {
         [coords[0] + 1, coords[1] - 2], 
         [coords[0] - 1, coords[1] - 2]
       ]},
-      this.setLegalSquaresHelper)
+      this.setLegalSquaresHelper)*/
+      var color = piece === 2 ? "white" : "black";
+      var legalSquares = moveCalc.calculateKnightMoves(coords, color, this.state.board);
+      this.setState({legalSquares: legalSquares});
     }
     else
       console.log("no piece to determine moveset for")
