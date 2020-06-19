@@ -71,9 +71,9 @@ export function calculateBishopMoves(coords, color, board) {
     }
 
     // upper right diagonal (with 0,0 top left reference)
-    var r = coords[0] + 1;
-    var c = coords[1] + 1;
-    var obstructed = false;
+    r = coords[0] + 1;
+    c = coords[1] + 1;
+    obstructed = false;
     while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
         if(board[r][c] === 0){ // all empty spaces are added 
             squares.push([r,c]);
@@ -105,9 +105,9 @@ export function calculateBishopMoves(coords, color, board) {
     }
 
     // lower left diagonal (with 0,0 top left reference)
-    var r = coords[0] - 1;
-    var c = coords[1] - 1;
-    var obstructed = false;
+    r = coords[0] - 1;
+    c = coords[1] - 1;
+    obstructed = false;
     while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
         if(board[r][c] === 0){ // all empty spaces are added 
             squares.push([r,c]);
@@ -139,9 +139,9 @@ export function calculateBishopMoves(coords, color, board) {
     }
 
     // lower right diagonal (with 0,0 top left reference)
-    var r = coords[0] - 1;
-    var c = coords[1] + 1;
-    var obstructed = false;
+    r = coords[0] - 1;
+    c = coords[1] + 1;
+    obstructed = false;
     while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
         if(board[r][c] === 0){ // all empty spaces are added 
             squares.push([r,c]);
@@ -169,6 +169,135 @@ export function calculateBishopMoves(coords, color, board) {
         }
         // move down the diagonal
         --r;
+        ++c;
+    }
+
+    return squares;
+}
+
+export function calculateRookMoves(coords, color, board) {
+    var squares = [];
+
+    // going up (towards row 0)
+    var r = coords[0] - 1;
+    var c = coords[1];
+    var obstructed = false;
+    while(r >= 0 && !obstructed) {
+        // add empty squares to legal moveset
+        if(board[r][c] === 0){
+            squares.push([r,c]);
+        }
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        --r;
+    }
+
+    // going down (towards row 7)
+    r = coords[0] + 1;
+    c = coords[1];
+    obstructed = false;
+
+    while(r <= 7 && !obstructed) {
+        // add empty squares to legal moveset
+        if(board[r][c] === 0){
+            squares.push([r,c]);
+        }
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        ++r;
+    }
+
+    // going left (towards col 0)
+    r = coords[0];
+    c = coords[1] - 1;
+    obstructed = false;
+
+    while(c >=0 && !obstructed) {
+        // add empty squares to legal moveset
+        if(board[r][c] === 0){
+            squares.push([r,c]);
+        }
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        --c;
+    }
+
+    // going right (towards col 7)
+    r = coords[0];
+    c = coords[1] + 1;
+    obstructed = false;
+
+    while(c >=0 && !obstructed) {
+        // add empty squares to legal moveset
+        if(board[r][c] === 0){
+            squares.push([r,c]);
+        }
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
         ++c;
     }
 

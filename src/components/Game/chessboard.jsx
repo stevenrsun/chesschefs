@@ -145,6 +145,13 @@ class ChessboardBase extends Component {
       var legalSquares = moveCalc.calculateBishopMoves(coords, color, this.state.board);
       this.setState({legalSquares: legalSquares});
     }
+
+    // rook move
+    if(piece === 4 || piece === 10){
+      var color = piece === 4 ? "white" : "black";
+      var legalSquares = moveCalc.calculateRookMoves(coords, color, this.state.board);
+      this.setState({legalSquares: legalSquares});
+    }
     else
       console.log("no piece to determine moveset for")
   }
