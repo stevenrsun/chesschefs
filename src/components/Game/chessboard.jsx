@@ -13,13 +13,19 @@ class ChessboardBase extends Component {
     this.board = this.database.ref("games/game-ID/board")
     this.mover = this.database.ref("games/game-ID/current_mover")
     this.piece = this.database.ref("games/game-ID/current_piece")
+    this.whiteKing = this.database.ref("games/game-ID/white_king")
+    this.blackKing = this.database.ref("games/game-ID/black_king")
 
     this.state = {
       currPiece: 0,
+      pieceMap: ["None", "Pawn (W)", "Knight (W)", "Bishop (W)", "Rook (W)", "Queen (W)", "King (W)", "Pawn (B)", "Knight (B)", "Bishop (B)", "Rook (B)", "Queen (B)", "King (B)"],
+      letterMap: ["a", "b", "c", "d", "e", "f", "g", "h"],
       board: [],
       movePool: [],
       legalSquares: [],
       sourceCoords: [],
+      whiteKingCoords: [7, 4],
+      blackKingCoords: [0, 4],
       currentMover: "white"
     };
   }
@@ -44,6 +50,20 @@ class ChessboardBase extends Component {
     })
     this.piece.on("value", (snap) => {
       this.setState({currPiece: snap.val()})
+    })
+    this.whiteKing.on("value", (snap) => {
+      var kingCoords = [];
+      var split = snap.val().split(" ");
+      kingCoords.push(parseInt(split[0]));
+      kingCoords.push(parseInt(split[1]));
+      this.setState({whiteKingCoords: kingCoords})
+    })
+    this.blackKing.on("value", (snap) => {
+      var kingCoords = [];
+      var split = snap.val().split(" ");
+      kingCoords.push(parseInt(split[0]));
+      kingCoords.push(parseInt(split[1]));
+      this.setState({blackKingCoords: kingCoords})
     })
   }
 
@@ -103,14 +123,26 @@ class ChessboardBase extends Component {
 
   handleMove = (coords) => {
     console.log("inside handle move, coords are " + coords)
+    // if legal move, modify board state and change current mover to opposite color
     if(this.moveIsLegal(coords)){
       this.database.ref("games/game-ID/board/" + coords[0] + "/" + coords[1]).set(this.state.currPiece);
       this.database.ref("games/game-ID/board/" + this.state.sourceCoords[0] + "/" + this.state.sourceCoords[1]).set(0);
-      this.setState({currPiece: 0})
-      if(this.state.currentMover === "white")
+      if(this.state.currentMover === "white"){
+        // update king coords if king is being moved
+        if(this.state.currPiece === 6){
+          this.whiteKing.set("" + coords[0] + " " + coords[1]);
+        }
+        this.setState({currPiece: 0})
         this.mover.set("black")
-      else
+      }
+      else{
+        // update king coords if king is being moved
+        if(this.state.currPiece === 12){
+          this.blackKing.set("" + coords[0] + " " + coords[1]);
+        }
+        this.setState({currPiece: 0})
         this.mover.set("white")
+      }
     }
     else{
       console.log("not a legal square")
@@ -123,8 +155,33 @@ class ChessboardBase extends Component {
     var i, current;
     for(i = 0; i < this.state.legalSquares.length; i++){
       current = this.state.legalSquares[i];
-      if(coords[0] == current[0] && coords[1] == current[1])
-        return true;
+      // pending destination is legal
+      if(coords[0] == current[0] && coords[1] == current[1]){
+        // finding legal squares for a king move involves check logic, don't need to make sure king won't be under check after this move
+        if(this.state.currPiece === 6 || this.state.currPiece === 12)
+          return true;
+        // check if this move will leave the king in check 
+        if(this.state.currentMover === "white"){
+          // create the move on a temporary board and see if king is under check in that board
+          var tempBoard = this.state.board;
+          tempBoard[this.state.sourceCoords[0]][this.state.sourceCoords[1]] = 0;
+          tempBoard[coords[0]][coords[1]] = this.state.currPiece;
+          console.log(moveCalc.isUnderCheck(this.state.whiteKingCoords, this.state.currentMover, tempBoard));
+          console.log(coords[0] + " " + coords[1])
+          // return true if not under check
+          return !moveCalc.isUnderCheck(this.state.whiteKingCoords, this.state.currentMover, tempBoard);
+        }
+        else {
+          // create the move on a temporary board and see if king is under check in that board
+          var tempBoard = this.state.board;
+          tempBoard[this.state.sourceCoords[0]][this.state.sourceCoords[1]] = 0;
+          tempBoard[coords[0]][coords[1]] = this.state.currPiece;
+          console.log(moveCalc.isUnderCheck(this.state.blackKingCoords, this.state.currentMover, tempBoard));
+          console.log(coords[0] + " " + coords[1])
+          // return true if not under check
+          return !moveCalc.isUnderCheck(this.state.blackKingCoords, this.state.currentMover, tempBoard);
+        }
+      }
     }
     return false;
   }
@@ -152,6 +209,20 @@ class ChessboardBase extends Component {
       var legalSquares = moveCalc.calculateRookMoves(coords, color, this.state.board);
       this.setState({legalSquares: legalSquares});
     }
+
+    // queen move
+    if(piece === 5 || piece === 11){
+      var color = piece === 5 ? "white" : "black";
+      var legalSquares = moveCalc.calculateQueenMoves(coords, color, this.state.board);
+      this.setState({legalSquares: legalSquares});
+    }
+
+    // king move
+    if(piece === 6 || piece === 12){
+      var color = piece === 6 ? "white" : "black";
+      var legalSquares = moveCalc.calculateKingMoves(coords, color, this.state.board);
+      this.setState({legalSquares: legalSquares});
+    }
     else
       console.log("no piece to determine moveset for")
   }
@@ -159,8 +230,10 @@ class ChessboardBase extends Component {
   render() {
     return (
       <div class="container ml-4">
-        <h1>{this.state.currPiece}</h1>
-        <h1>{this.state.legalSquares[0]}</h1>
+        <h1>Currently Picked Up: {this.state.pieceMap[this.state.currPiece]}</h1>
+        <h1>from: {this.state.letterMap[this.state.sourceCoords[0]]}{this.state.sourceCoords[1] + 1}</h1>
+        <h1>white king on {this.state.whiteKingCoords}</h1>
+        <h1>black king on {this.state.blackKingCoords}</h1> 
         <div class="row" style={this.styles.board} ref={this.setWrapperRef}>
           <div class="col-sm-1" style={this.styles.square}>
             <Square isLight={true} onClick={this.handleClick} coords={[0,0]}/>
