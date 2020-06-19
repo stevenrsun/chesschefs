@@ -361,10 +361,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 9 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 3 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -393,10 +393,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 9 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 3 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -425,10 +425,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 9 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 3 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -457,10 +457,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 9 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 3 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -491,10 +491,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 10 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 4 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -522,10 +522,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 10 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 4 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -553,10 +553,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 10 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 4 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
@@ -584,10 +584,10 @@ export function isUnderCheck(coords, color, board){
         ){
             return true;
         }
-        // found friendly piece
+        // found friendly piece or non threatening enemy piece
         if(board[r][c] !== 0){
-            if((color === "white" && board[r][c] <= 6) ||
-            (color === "black" && board[r][c] >= 7) 
+            if((color === "white" && board[r][c] !== 10 && board[r][c] !== 11) ||
+            (color === "black" && board[r][c] !== 4 && board[r][c] !== 5) 
             ){
                 obstructed = true;
             }
