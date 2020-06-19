@@ -120,7 +120,7 @@ class ChessboardBase extends Component {
   }
 
   moveIsLegal = (coords) => {
-    var i, j, current;
+    var i, current;
     for(i = 0; i < this.state.legalSquares.length; i++){
       current = this.state.legalSquares[i];
       if(coords[0] == current[0] && coords[1] == current[1])
@@ -136,6 +136,13 @@ class ChessboardBase extends Component {
     if(piece === 2 || piece === 8){
       var color = piece === 2 ? "white" : "black";
       var legalSquares = moveCalc.calculateKnightMoves(coords, color, this.state.board);
+      this.setState({legalSquares: legalSquares});
+    }
+
+    // bishop move
+    if(piece === 3 || piece === 9){
+      var color = piece === 3 ? "white" : "black";
+      var legalSquares = moveCalc.calculateBishopMoves(coords, color, this.state.board);
       this.setState({legalSquares: legalSquares});
     }
     else

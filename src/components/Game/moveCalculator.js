@@ -31,3 +31,146 @@ export function calculateKnightMoves(coords, color, board) {
 
     return squares;
 }
+
+export function calculateBishopMoves(coords, color, board) {
+    // find possible destinations (in bounds, not obstructed, not capturing own piece) 
+    var squares = [];
+
+    // upper left diagonal (with 0,0 top left reference)
+    var r = coords[0] + 1;
+    var c = coords[1] - 1;
+    var obstructed = false;
+    while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
+        if(board[r][c] === 0){ // all empty spaces are added 
+            squares.push([r,c]);
+        }
+        // OBSTRUCTION FOUND:
+        // if white, stop at first black piece or square before first white piece
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // if black, stop at first white piece or square before first black piece
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // move up the diagonal
+        ++r;
+        --c;
+    }
+
+    // upper right diagonal (with 0,0 top left reference)
+    var r = coords[0] + 1;
+    var c = coords[1] + 1;
+    var obstructed = false;
+    while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
+        if(board[r][c] === 0){ // all empty spaces are added 
+            squares.push([r,c]);
+        }
+        // OBSTRUCTION FOUND:
+        // if white, stop at first black piece or square before first white piece
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // if black, stop at first white piece or square before first black piece
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // move up the diagonal
+        ++r;
+        ++c;
+    }
+
+    // lower left diagonal (with 0,0 top left reference)
+    var r = coords[0] - 1;
+    var c = coords[1] - 1;
+    var obstructed = false;
+    while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
+        if(board[r][c] === 0){ // all empty spaces are added 
+            squares.push([r,c]);
+        }
+        // OBSTRUCTION FOUND:
+        // if white, stop at first black piece or square before first white piece
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // if black, stop at first white piece or square before first black piece
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // move down the diagonal
+        --r;
+        --c;
+    }
+
+    // lower right diagonal (with 0,0 top left reference)
+    var r = coords[0] - 1;
+    var c = coords[1] + 1;
+    var obstructed = false;
+    while(!obstructed && r >= 0 && r <= 7 && c >= 0 && c <= 7){
+        if(board[r][c] === 0){ // all empty spaces are added 
+            squares.push([r,c]);
+        }
+        // OBSTRUCTION FOUND:
+        // if white, stop at first black piece or square before first white piece
+        else if(color === "white"){
+            if(board[r][c] <= 6){ // white piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or white, must be black piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // if black, stop at first white piece or square before first black piece
+        else if(color === "black"){
+            if(board[r][c] >= 7){ // black piece, do not add to legal squares
+                obstructed = true;
+            }
+            else { // not blank or black, must be white piece
+                obstructed = true;
+                squares.push([r,c])
+            }
+        }
+        // move down the diagonal
+        --r;
+        ++c;
+    }
+
+    return squares;
+}
