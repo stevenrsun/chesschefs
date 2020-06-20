@@ -122,7 +122,7 @@ class ChessboardBase extends Component {
       }
 
       // black move
-      else if(piece <= 12 && piece >= 6 && this.state.currentMover === "black"){
+      else if(piece <= 12 && piece >= 7 && this.state.currentMover === "black"){
         if(this.props.uid === this.props.blackId){
           console.log("can move")
           this.setState({currPiece: piece}); // update picked up piece
