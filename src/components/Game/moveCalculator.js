@@ -1,3 +1,40 @@
+export function calculatePawnMoves(coords, color, board) {
+    var squares = [];
+    var r = coords[0];
+    var c = coords[1];
+    if(color === "black") {
+        // move forward one square
+        if(board[r + 1][c] === 0)
+            squares.push([r + 1, c]);
+        // move forward two squares
+        if(r === 1 && board[r + 2][c] === 0)
+            squares.push([r + 2, c]);
+        // diagonal capture right
+        if(board[r + 1][c - 1] !== 0 && board[r + 1][c - 1] <= 6)
+            squares.push([r + 1, c - 1]);
+        // diagonal capture left
+        if(board[r + 1][c + 1] !== 0 && board[r + 1][c + 1] <= 6)
+            squares.push([r + 1, c + 1]);
+    }
+
+    if(color === "white") {
+        // move forward one square
+        if(board[r - 1][c] === 0)
+            squares.push([r - 1, c]);
+        // move forward two squares
+        if(r === 6 && board[r - 2][c] === 0)
+            squares.push([r - 2, c]);
+        // diagonal capture left
+        if(board[r - 1][c - 1] >= 7)
+            squares.push([r - 1, c - 1]);
+        // diagonal capture right
+        if(board[r - 1][c + 1] >= 7)
+            squares.push([r - 1, c + 1]);
+    }
+
+    return squares;
+}
+
 export function calculateKnightMoves(coords, color, board) {
     // calculate all eight possible knight destinations, not checking for move legality
     var movePool = [[coords[0] - 2, coords[1] + 1], 
