@@ -486,40 +486,42 @@ export function canTakeKnight(color, board, knightCoords) {
     for (c = 0; c < board.length; c++) { //still uses board.length cus its just 8x8
       var currentCoords = { r, c };
       var currentPiece = board[currentCoords[0]][Coords[1]];
-      if (color == "white" && currentPiece >= 1 && currentPiece <= 6) {
+      if (currentPiece != 0) {
         var canTake;
-        switch (currentPiece) {
-          case 1:
-            canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
-          case 2:
-            canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
-          case 3:
-            canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
-          case 4:
-            canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
-          case 5:
-            canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
-          case 6:
-            canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+        if (color == "white" && currentPiece >= 1 && currentPiece <= 6) {
+          switch (currentPiece) {
+            case 1:
+              canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
+            case 2:
+              canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
+            case 3:
+              canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
+            case 4:
+              canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
+            case 5:
+              canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
+            case 6:
+              canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+          }
+        } else if (color == "black" && currentPiece >= 7 && currentPiece <= 12) {
+          switch (currentPiece) {
+            case 7:
+              canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
+            case 8:
+              canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
+            case 9:
+              canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
+            case 10:
+              canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
+            case 11:
+              canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
+            case 12:
+              canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+          }
         }
-      } else if (color == "black" && currentPiece >= 7 && currentPiece <= 12) {
-        switch (currentPiece) {
-          case 7:
-            canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
-          case 8:
-            canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
-          case 9:
-            canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
-          case 10:
-            canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
-          case 11:
-            canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
-          case 12:
-            canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+        if (canTake) {
+          return canTake;
         }
-      }
-      if (canTake) {
-        return canTake;
       }
     }
   }
@@ -536,7 +538,6 @@ export function canBlockLineChecks(color, board, atkPieceCoords, kingCoords) {
       var currentPiece = board[currentCoords[0], currentCoords[1]];
       if (currentPiece != 0) {
         var canBlock;
-        var possibleMoves;
         if (color == "white" && currentPiece >= 1 && currentPiece <= 6) {
           switch (currentPiece) {
             case 1:
@@ -569,9 +570,9 @@ export function canBlockLineChecks(color, board, atkPieceCoords, kingCoords) {
               canBlock = canBlockHelper(calculateKingMoves(currentCoords, color, board), takeableSquares);
           }
         }
-      }
-      if (canBlock) {
-        return canBlock;
+        if (canBlock) {
+          return canBlock;
+        }
       }
     }
   }
