@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 //import firebase from "firebase";
-import {withFirebase} from "../FireBase";
+import { withFirebase } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 
@@ -23,10 +23,10 @@ class CounterWithUID extends Component {
     super(props);
 
     this.database = this.props.firebase.db;
-    this.counterOne = this.database.ref('game_example').child("white_counter");
-    this.counterTwo = this.database.ref('game_example').child("black_counter");
-    this.white = this.database.ref('game_example').child("white_id");
-    this.black = this.database.ref('game_example').child("black_id");
+    this.counterOne = this.database.ref("game_example").child("white_counter");
+    this.counterTwo = this.database.ref("game_example").child("black_counter");
+    this.white = this.database.ref("game_example").child("white_id");
+    this.black = this.database.ref("game_example").child("black_id");
 
     this.state = {
       countOne: 0,
@@ -54,16 +54,19 @@ class CounterWithUID extends Component {
       this.setState({
         whiteId: snapshot.val(),
       });
-      if(snapshot.val() === 0)
-        this.white.set(this.props.uid)
+      if (snapshot.val() === 0) this.white.set(this.props.uid);
     });
 
     this.black.on("value", (snapshot) => {
       this.setState({
         blackId: snapshot.val(),
       });
-      if(snapshot.val() === 0 && this.state.whiteId != 0 && this.state.whiteId != this.props.uid)
-        this.black.set(this.props.uid)
+      if (
+        snapshot.val() === 0 &&
+        this.state.whiteId !== 0 &&
+        this.state.whiteId !== this.props.uid
+      )
+        this.black.set(this.props.uid);
     });
   }
 
@@ -113,7 +116,11 @@ class CounterWithUID extends Component {
           Increment Button Two
         </button>
 
-        <Chessboard uid={this.props.uid} whiteId={this.state.whiteId} blackId={this.state.blackId}/>
+        <Chessboard
+          uid={this.props.uid}
+          whiteId={this.state.whiteId}
+          blackId={this.state.blackId}
+        />
       </React.Fragment>
     );
   }
