@@ -202,6 +202,32 @@ class ChessboardBase extends Component {
     console.log(currentMover + "currentmover!!!");
     console.log(currentMover);
     var nextMover = currentMover === "white" ? "black" : "white";
+    if(nextMover === "white"){
+      // checkmate? if so, show alert and end game
+      if(moveCalc.isCheckmated(this.state.whiteKingCoords, "white", this.state.board)){
+        this.checkmate.set("white");
+        // remove right to move pieces from both sides
+        this.database.ref("game_example/white_id_old").set(this.props.whiteId);
+        this.database.ref("game_example/black_id_old").set(this.props.blackId);
+        this.database.ref("game_example/white_id").set(-1);
+        this.database.ref("game_example/black_id").set(-1);
+        // alert victory
+        alert("Black wins!");
+      }
+    }
+    else{
+      // checkmate? if so, show alert and end game
+      if(moveCalc.isCheckmated(this.state.blackKingCoords, "black", this.state.board)){
+        this.checkmate.set("white");
+        // remove right to move pieces from both sides
+        this.database.ref("game_example/white_id_old").set(this.props.whiteId);
+        this.database.ref("game_example/black_id_old").set(this.props.blackId);
+        this.database.ref("game_example/white_id").set(-1);
+        this.database.ref("game_example/black_id").set(-1);
+        // alert victory
+        alert("White wins!");
+      }
+    }
     this.setState({ currPiece: 0 });
     this.mover.set(nextMover);
   };
