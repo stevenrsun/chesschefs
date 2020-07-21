@@ -3,6 +3,7 @@ import Square from "./square";
 import { withFirebase } from "../FireBase";
 import * as moveCalc from "./moveCalculator.js";
 import PromoMenu from "./promoMenu.jsx";
+import { Alert } from "react-native";
 
 const Chessboard = ({ uid, whiteId, blackId }) => (
   <ChessboardFinal uid={uid} whiteId={whiteId} blackId={blackId} />
@@ -20,6 +21,7 @@ class ChessboardBase extends Component {
     this.blackKing = this.database.ref("games/game-ID/black_king");
     this.promoMenuDb = this.database.ref("games/game-ID/promo_menu");
     this.promoCoords = this.database.ref("games/game-ID/promo_coords");
+    this.checkmate = this.database.ref("games/game-ID/checkmate");
 
     this.state = {
       currPiece: 0,
@@ -49,6 +51,7 @@ class ChessboardBase extends Component {
       promoMenu: false,
       promotedPiece: 0,
       promoCoords: [0, 0],
+      checkmate: 0
     };
   }
   styles = {
@@ -96,6 +99,9 @@ class ChessboardBase extends Component {
       kingCoords.push(parseInt(split[0]));
       kingCoords.push(parseInt(split[1]));
       this.setState({ blackKingCoords: kingCoords });
+    });
+    this.checkmate.on("value", (snap) => {
+      this.setState({checkmate: snap.val()});
     });
   }
 
@@ -235,6 +241,20 @@ class ChessboardBase extends Component {
           if (this.state.currPiece === 6) {
             this.whiteKing.set("" + coords[0] + " " + coords[1]);
           }
+
+          // checkmate? if so, show alert and end game
+          if(moveCalc.isCheckmated(this.state.blackKingCoords, "black", this.state.board)){
+            this.checkmate.set("white");
+            // remove right to move pieces from both sides
+            this.database.ref("game_example/white_id_old").set(this.props.whiteId);
+            this.database.ref("game_example/black_id_old").set(this.props.blackId);
+            this.database.ref("game_example/white_id").set(-1);
+            this.database.ref("game_example/black_id").set(-1);
+            // alert victory
+            alert("White wins!");
+          }
+
+          
           this.setState({ currPiece: 0 });
           this.mover.set("black");
         } else {
@@ -242,10 +262,25 @@ class ChessboardBase extends Component {
           if (this.state.currPiece === 12) {
             this.blackKing.set("" + coords[0] + " " + coords[1]);
           }
+
+          //checkmate? if so, show alert and end game
+          if(moveCalc.isCheckmated(this.state.whiteKingCoords, "white", this.state.board)){
+            console.log("BLACKCHECKMATE")
+            this.checkmate.set("black");
+            // remove right to move pieces from both sides
+            this.database.ref("game_example/white_id_old").set(this.props.whiteId);
+            this.database.ref("game_example/black_id_old").set(this.props.blackId);
+            this.database.ref("game_example/white_id").set(-1);
+            this.database.ref("game_example/black_id").set(-1);
+            // alert victory
+            alert("Black wins!");
+          }
+
           this.setState({ currPiece: 0 });
           this.mover.set("white");
         }
       }
+
     } else {
       console.log("not a legal square");
       this.setState({ currPiece: 0 });
@@ -254,7 +289,6 @@ class ChessboardBase extends Component {
   };
 
   moveIsLegal = (coords) => {
-    console.log("YOOO");
     var i, current;
     for (i = 0; i < this.state.legalSquares.length; i++) {
       current = this.state.legalSquares[i];
@@ -320,10 +354,12 @@ class ChessboardBase extends Component {
   };
 
   setLegalSquares = (coords, piece) => {
+    console.log("THE PIECE CLICKED ON IS: " + piece);
     if (piece === 0) return;
 
     // pawn move
     if (piece === 1 || piece === 7) {
+      console.log("AAAAAAAAAAAA")
       var color = piece === 1 ? "white" : "black";
       var legalSquares = moveCalc.calculatePawnMoves(
         coords,

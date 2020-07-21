@@ -455,15 +455,21 @@ export function calculateKingMoves(coords, color, board) {
 }
 
 export function isCheckmated(kingCoords, color, board) {
-  var isKingChecked = calculateKingMoves(kingCoords, color, board).length === 0;
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  var kingCantMove = calculateKingMoves(kingCoords, color, board).length === 0;
+  console.log("king cant move: " + kingCantMove)
+  console.log(color)
   var attackingPieces = isUnderCheck(kingCoords, color, board);
+  console.log("attacking pieces length: " + attackingPieces.length)
+  console.log(attackingPieces[0])
   //double check
-  if (attackingPieces.length === 2 && isKingChecked) {
+  if (attackingPieces.length === 2 && kingCantMove) {
     return true;
   }
   //single check
   if (attackingPieces.length !== 0) {
-    if (isKingChecked) {
+    console.log("single check")
+    if (kingCantMove) {
       var i;
       for (i = 0; i < attackingPieces.length; i++) {
         var r = attackingPieces[i][0];
@@ -471,52 +477,180 @@ export function isCheckmated(kingCoords, color, board) {
         var piece = board[r][c];
         var atkPieceCoords = { r, c };
         if (piece % 6 === 2) { //if knight
-          return !canTakeKnight(color, board, atkPieceCoords);
-        } else if (piece % 6 === 4 || piece % 6 === 3 || piece % 6 === 5) {
+          return !canTakeKnight(color, board, atkPieceCoords, kingCoords);
+        } else if (piece % 6 === 4 || piece % 6 === 3 || piece % 6 === 5 || piece % 6 === 1) {
+          console.log(canBlockLineChecks(color, board, atkPieceCoords, kingCoords))
           return !canBlockLineChecks(color, board, atkPieceCoords, kingCoords);
         }
       }
     }
   }
+  return false;
 }
 
-export function canTakeKnight(color, board, knightCoords) {
+export function canTakeKnight(color, board, knightCoords, kingCoords) {
   var r, c;
   for (r = 0; r < board.length; r++) { //loop through the whole board to find if knight can be taken
     for (c = 0; c < board.length; c++) { //still uses board.length cus its just 8x8
       var currentCoords = { r, c };
-      var currentPiece = board[currentCoords[0]][Coords[1]];
+      var currentPiece = board[currentCoords[0]][currentCoords[1]];
       if (currentPiece != 0) {
-        var canTake;
+        var canTake =false;
         if (color == "white" && currentPiece >= 1 && currentPiece <= 6) {
           switch (currentPiece) {
-            case 1:
-              canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
-            case 2:
-              canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
-            case 3:
-              canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
-            case 4:
-              canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
-            case 5:
-              canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
-            case 6:
-              canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+            case 1: {
+              if(calculatePawnMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 1;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 1;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 2: {
+              if(calculateKnightMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 2;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 2;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 3: {
+              if(calculateBishopMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 3;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 3;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 4: {
+              if(calculateRookMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 4;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 4;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 5: {
+              if(calculateQueenMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 5;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 5;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
           }
         } else if (color == "black" && currentPiece >= 7 && currentPiece <= 12) {
           switch (currentPiece) {
-            case 7:
-              canTake = calculatePawnMoves(currentCoords, color, board).includes(knightCoords);
-            case 8:
-              canTake = calculateKnightMoves(currentCoords, color, board).includes(knightCoords);
-            case 9:
-              canTake = calculateBishopMoves(currentCoords, color, board).includes(knightCoords);
-            case 10:
-              canTake = calculateRookMoves(currentCoords, color, board).includes(knightCoords);
-            case 11:
-              canTake = calculateQueenMoves(currentCoords, color, board).includes(knightCoords);
-            case 12:
-              canTake = calculateKingMoves(currentCoords, color, board).includes(knightCoords);
+            case 7: {
+              if(calculatePawnMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 7;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 7;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 8: {
+              if(calculateKnightMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 8;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 8;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 9: {
+              if(calculateBishopMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 9;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 9;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 10: {
+              if(calculateRookMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 10;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 10;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 11: {
+              if(calculateQueenMoves(currentCoords, color, board).includes(knightCoords)) {
+                // make move and see if king under check (moved piece was pinned)
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = knightCoords[0];
+                var c_dest = knightCoords[1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 11;
+                canTake = isUnderCheck(kingCoords, color, board).length === 0;
+                board[r_source][c_source] = 11;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
           }
         }
         if (canTake) {
@@ -537,37 +671,183 @@ export function canBlockLineChecks(color, board, atkPieceCoords, kingCoords) {
       var currentCoords = { r, c }
       var currentPiece = board[currentCoords[0], currentCoords[1]];
       if (currentPiece != 0) {
-        var canBlock;
-        if (color == "white" && currentPiece >= 1 && currentPiece <= 6) {
+        var canBlock = false;
+        var blockSquare;
+        if (color == "white" && currentPiece >= 1 && currentPiece <= 5) {
           switch (currentPiece) {
-            case 1:
-              canBlock = canBlockHelper(calculatePawnMoves(currentCoords, color, board), takeableSquares);
-            case 2:
-              canBlock = canBlockHelper(calculateKnightMoves(currentCoords, color, board), takeableSquares);
-            case 3:
-              canBlock = canBlockHelper(calculateBishopMoves(currentCoords, color, board), takeableSquares);
-            case 4:
-              canBlock = canBlockHelper(calculateRookMoves(currentCoords, color, board), takeableSquares);
-            case 5:
-              canBlock = canBlockHelper(calculateQueenMoves(currentCoords, color, board), takeableSquares);
-            case 6:
-              canBlock = canBlockHelper(calculateKingMoves(currentCoords, color, board), takeableSquares);
-
+            case 1: {
+              blockSquare = canBlockHelper(calculatePawnMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 1;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 1;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 2: {
+              blockSquare = canBlockHelper(calculateKnightMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 2;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 2;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 3: {
+              blockSquare = canBlockHelper(calculateBishopMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 3;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 3;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 4: {
+              blockSquare = canBlockHelper(calculateRookMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 4;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 4;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 5: {
+              blockSquare = canBlockHelper(calculateQueenMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 5;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 5;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
           }
-        } else if (color == "black" && currentPiece >= 7 && currentPiece <= 12) {
+        } else if (color == "black" && currentPiece >= 7 && currentPiece <= 11) {
           switch (currentPiece) {
-            case 7:
-              canBlock = canBlockHelper(calculatePawnMoves(currentCoords, color, board), takeableSquares);
-            case 8:
-              canBlock = canBlockHelper(calculateKnightMoves(currentCoords, color, board), takeableSquares);
-            case 9:
-              canBlock = canBlockHelper(calculateBishopMoves(currentCoords, color, board), takeableSquares);
-            case 10:
-              canBlock = canBlockHelper(calculateRookMoves(currentCoords, color, board), takeableSquares);
-            case 11:
-              canBlock = canBlockHelper(calculateQueenMoves(currentCoords, color, board), takeableSquares);
-            case 12:
-              canBlock = canBlockHelper(calculateKingMoves(currentCoords, color, board), takeableSquares);
+            case 7:{
+              blockSquare = canBlockHelper(calculatePawnMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 7;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 7;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 8: {
+              blockSquare = canBlockHelper(calculateKnightMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 8;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 8;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 9: {
+              blockSquare = canBlockHelper(calculateBishopMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 9;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 9;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 10: {
+              blockSquare = canBlockHelper(calculateRookMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 10;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 10;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
+            case 11: {
+              blockSquare = canBlockHelper(calculateQueenMoves(currentCoords, color, board), takeableSquares);
+              // possible move to block check exists, make the move and see if it leads to king under check
+              if(blockSquare != -1){
+                var r_source = currentCoords[0];
+                var c_source = currentCoords[1];
+                var r_dest = takeableSquares[blockSquare][0];
+                var c_dest = takeableSquares[blockSquare][1];
+                var dest_piece = board[r_dest][c_dest];
+                board[r_source][c_source] = 0;
+                board[r_dest][c_dest] = 11;
+                canBlock = isUnderCheck(kingCoords, color, board).length === 0;
+                // revert the move
+                board[r_source][c_source] = 11;
+                board[r_dest][c_dest] = dest_piece;
+              }
+            }
           }
         }
         if (canBlock) {
@@ -582,11 +862,10 @@ export function canBlockLineChecks(color, board, atkPieceCoords, kingCoords) {
 export function canBlockHelper(possibleMoves, takeableSquares) {
   var i;
   for (i = 0; i < possibleMoves.length; i++) {
-    var canBlock = takeableSquares.includes(possibleMoves[i]);
-    if (canBlock) {
-      return canBlock;
-    }
+    if(takeableSquares.includes(possibleMoves[i]))
+      return i;
   }
+  return -1;
 }
 
 export function findMateBlocks(kingCoords, atkPieceCoords) { //returns all the squares you can access to block check, except if the attacker is knight.

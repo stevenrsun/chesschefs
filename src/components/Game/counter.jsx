@@ -27,6 +27,7 @@ class CounterWithUID extends Component {
     this.counterTwo = this.database.ref("game_example").child("black_counter");
     this.white = this.database.ref("game_example").child("white_id");
     this.black = this.database.ref("game_example").child("black_id");
+    this.checkmate = this.database.ref("games/game-ID/checkmate");
 
     this.state = {
       countOne: 0,
@@ -34,10 +35,18 @@ class CounterWithUID extends Component {
 
       whiteId: "",
       blackId: "",
+
+      checkmate: 0
     };
   }
 
   componentDidMount() {
+    this.checkmate.on("value", (snap) => {
+      this.setState({
+        checkmate: snap.val(),
+      });
+    });
+
     this.counterOne.on("value", (snap) => {
       this.setState({
         countOne: snap.val(),
@@ -83,6 +92,15 @@ class CounterWithUID extends Component {
   };
 
   render() {
+    let winMenu;
+    if (this.state.checkmate !== 0) {
+      winMenu =
+        this.state.checkmate === "white" ? (
+          <h1 class="head">WHITE VICTORY</h1>
+        ) : (
+          <h1 class="head">BLACK VICTORY</h1>
+        );
+    }
     return (
       <React.Fragment>
         <h1>{this.props.uid}</h1>
@@ -115,6 +133,8 @@ class CounterWithUID extends Component {
         >
           Increment Button Two
         </button>
+
+        {winMenu}
 
         <Chessboard
           uid={this.props.uid}
