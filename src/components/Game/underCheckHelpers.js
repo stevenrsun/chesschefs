@@ -209,6 +209,7 @@ export function findAttackingCrosses(coords, color, board) {
     ((color === "white" && board[r][c] === 12) ||
       (color === "black" && board[r][c] == 6))
   ) {
+    console.log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + color + " " + board[0][4] + " " + coords[0] + "," + coords[1] + " r,c is " + r + "," + c)
     return [r, c];
   }
   while (!obstructed && c >= 0) {

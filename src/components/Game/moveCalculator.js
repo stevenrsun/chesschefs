@@ -384,21 +384,24 @@ export function isUnderCheck(coords, color, board) {
 
   if (attackingKnights != null) {
     attackingSquares.push(attackingKnights);
+    console.log("attacking knights")
   }
   if (attackingDiagonals != null) {
     attackingSquares.push(attackingDiagonals);
+    console.log("attacking diags")
   }
   if (attackingCrosses != null) {
     attackingSquares.push(attackingCrosses);
+    console.log("attacking crosses")
   }
   if (attackingPawns != null) {
     attackingSquares.push(attackingPawns);
+    console.log("attacking pawns")
   }
-  console.log(attackingSquares + "ARRAY");
   return attackingSquares;
 }
 
-export function calculateKingMoves(coords, color, board) {
+export function calculateKingMoves(coords, color, board, ks, qs) {
   // all moves starting from straight left and going clockwise until bottom left (ref 0,0 as top left corner)
   var movePool = [
     [coords[0], coords[1] - 1],
@@ -441,22 +444,37 @@ export function calculateKingMoves(coords, color, board) {
         // simulate move on board then see if king is under check
         board[coords[0]][coords[1]] = 0;
         var temp = board[r][c]; // save the piece that the king is about to take  (0 if no piece there)
-        board[r][c] = 6;
+        board[r][c] = 12;
         if (isUnderCheck([r, c], "black", board).length === 0)
           squares.push([r, c]);
         // reset the board back to before the move
-        board[coords[0]][coords[1]] = 6;
+        board[coords[0]][coords[1]] = 12;
         board[r][c] = temp;
       }
     }
   }
+  console.log("CHECKING FOR CASTLE ---------------------------------------" + ks + " " + canCastleKingside(color, board))
+  if(ks && canCastleKingside(color, board)){
+    console.log("CAN CASTLE KINGSIDE")
+    if(color === "white")
+      squares.push([7, 6]);
+    else
+      squares.push([0,6]);
+  }
+  if(qs && canCastleQueenside(color, board)){
+    if(color === "white")
+      squares.push([7, 2]);
+    else
+      squares.push([0,2]);
+  }
+    
 
   return squares;
 }
 
 export function isCheckmated(kingCoords, color, board) {
   console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  var kingCantMove = calculateKingMoves(kingCoords, color, board).length === 0;
+  var kingCantMove = calculateKingMoves(kingCoords, color, board, false, false).length === 0;
   console.log("king cant move: " + kingCantMove)
   console.log(color)
   var attackingPieces = isUnderCheck(kingCoords, color, board);
@@ -942,4 +960,27 @@ export function findMateBlocks(kingCoords, atkPieceCoords) { //returns all the s
   }
 
   return takeableSquares
+}
+
+export function canCastleKingside(color, board){
+  if(color === "white"){
+    // (7,5) (7,6) clear and not under check
+    return (board[7][5] === 0 && board[7][6] === 0) && (isUnderCheck([7,5], "white", board).length === 0) && (isUnderCheck([7,6], "white", board).length === 0);
+  }
+  else {
+    // (0,5) (0,6) clear and not under check
+    console.log("length of attacking squares for 0,5 0,6 are " + isUnderCheck([0,5], "black", board) + " " + isUnderCheck([0,6], "black", board).length)
+    return (board[0][5] === 0 && board[0][6] === 0) && (isUnderCheck([0,5], "black", board).length === 0) && (isUnderCheck([0,6], "black", board).length === 0);
+  }
+}
+
+export function canCastleQueenside(color, board){
+  if(color === "white"){
+    // (7,1) (7,2) (7,3) clear and not under check
+    return (board[7][1] === 0 && board[7][2] === 0 && board[7][3] === 0) && (isUnderCheck([7,1], "white", board).length === 0) && (isUnderCheck([7,2], "white", board).length === 0) && (isUnderCheck([7,3], "white", board).length === 0);
+  }
+  else {
+    // (0,1) (0,2) (0,3) clear and not under check
+    return (board[0][1] === 0 && board[0][2] === 0 && board[0][3] === 0) && (isUnderCheck([0,1], "black", board).length === 0) && (isUnderCheck([0,2], "black", board).length === 0) && (isUnderCheck([0,3], "black", board).length === 0);
+  }
 }

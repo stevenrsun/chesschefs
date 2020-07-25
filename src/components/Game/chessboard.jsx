@@ -22,6 +22,10 @@ class ChessboardBase extends Component {
     this.promoMenuDb = this.database.ref("games/game-ID/promo_menu");
     this.promoCoords = this.database.ref("games/game-ID/promo_coords");
     this.checkmate = this.database.ref("games/game-ID/checkmate");
+    this.white_ks = this.database.ref("games/game-ID/white_castle_ks");
+    this.white_qs = this.database.ref("games/game-ID/white_castle_qs");
+    this.black_ks = this.database.ref("games/game-ID/black_castle_ks");
+    this.black_qs = this.database.ref("games/game-ID/black_castle_qs");
 
     this.state = {
       currPiece: 0,
@@ -51,7 +55,11 @@ class ChessboardBase extends Component {
       promoMenu: false,
       promotedPiece: 0,
       promoCoords: [0, 0],
-      checkmate: 0
+      checkmate: 0,
+      whiteCastleKs: true,
+      whiteCastleQs: true,
+      blackCastleKs: true,
+      blackCastleQs: true
     };
   }
   styles = {
@@ -102,6 +110,18 @@ class ChessboardBase extends Component {
     });
     this.checkmate.on("value", (snap) => {
       this.setState({checkmate: snap.val()});
+    });
+    this.white_ks.on("value", (snap) => {
+      this.setState({whiteCastleKs: snap.val()});
+    });
+    this.white_qs.on("value", (snap) => {
+      this.setState({whiteCastleQs: snap.val()});
+    });
+    this.black_ks.on("value", (snap) => {
+      this.setState({blackCastleKs: snap.val()});
+    });
+    this.black_qs.on("value", (snap) => {
+      this.setState({blackCastleQs: snap.val()});
     });
   }
 
@@ -266,7 +286,44 @@ class ChessboardBase extends Component {
           // update king coords if king is being moved
           if (this.state.currPiece === 6) {
             this.whiteKing.set("" + coords[0] + " " + coords[1]);
+            if(this.state.whiteCastleKs || this.state.whiteCastleQs){
+              // move rook if it was a castle move (can castle = true, moved piece = king)
+              if(coords[1] === 6){
+                this.database
+                  .ref("games/game-ID/board/" + 7 + "/" + 5)
+                  .set(4);
+                this.database
+                  .ref(
+                    "games/game-ID/board/" +
+                      7 +
+                      "/" +
+                      7
+                  )
+                  .set(0);
+              }
+              else if(coords[1] === 2){
+                this.database
+                  .ref("games/game-ID/board/" + 7 + "/" + 3)
+                  .set(4);
+                this.database
+                  .ref(
+                    "games/game-ID/board/" +
+                      7 +
+                      "/" +
+                      0
+                  )
+                  .set(0);
+              }
+
+              this.white_ks.set(false);
+              this.white_qs.set(false);
+            }
           }
+
+          else if(this.state.currPiece === 4 && this.state.sourceCoords[0] === 7 && this.state.sourceCoords[1] === 0 && this.state.whiteCastleQs)
+            this.white_qs.set(false);
+          else if(this.state.currPiece === 4 && this.state.sourceCoords[0] === 7 && this.state.sourceCoords[1] === 7 && this.state.whiteCastleKs)
+            this.white_ks.set(false);
 
           // checkmate? if so, show alert and end game
           if(moveCalc.isCheckmated(this.state.blackKingCoords, "black", this.state.board)){
@@ -287,7 +344,43 @@ class ChessboardBase extends Component {
           // update king coords if king is being moved
           if (this.state.currPiece === 12) {
             this.blackKing.set("" + coords[0] + " " + coords[1]);
+            if(this.state.blackCastleKs || this.state.blackCastleQs){
+              if(coords[1] === 6){
+                this.database
+                  .ref("games/game-ID/board/" + 0 + "/" + 5)
+                  .set(10);
+                this.database
+                  .ref(
+                    "games/game-ID/board/" +
+                      0 +
+                      "/" +
+                      7
+                  )
+                  .set(0);
+              }
+              else if(coords[1] === 2){
+                this.database
+                  .ref("games/game-ID/board/" + 0 + "/" + 3)
+                  .set(10);
+                this.database
+                  .ref(
+                    "games/game-ID/board/" +
+                      0 +
+                      "/" +
+                      0
+                  )
+                  .set(0);
+              }
+
+              this.black_ks.set(false);
+              this.black_qs.set(false);
+            }
           }
+
+          else if(this.state.currPiece === 10 && this.state.sourceCoords[0] === 0 && this.state.sourceCoords[1] === 0 && this.state.blackCastleQs)
+            this.black_qs.set(false);
+          else if(this.state.currPiece === 10 && this.state.sourceCoords[0] === 0 && this.state.sourceCoords[1] === 7 && this.state.blackCastleKs)
+            this.black_ks.set(false);
 
           //checkmate? if so, show alert and end game
           if(moveCalc.isCheckmated(this.state.whiteKingCoords, "white", this.state.board)){
@@ -442,10 +535,15 @@ class ChessboardBase extends Component {
     // king move
     if (piece === 6 || piece === 12) {
       var color = piece === 6 ? "white" : "black";
+      var ks = this.state.currentMover === "white" ? this.state.whiteCastleKs : this.state.blackCastleKs;
+      var qs = this.state.currentMover === "white" ? this.state.whiteCastleQs : this.state.blackCastleQs;
+      console.log("aaaaaaaaaaaaaaaaaaaaa calculating king moves, piece number at 0,4 is " + this.state.board)
       var legalSquares = moveCalc.calculateKingMoves(
         coords,
         color,
-        this.state.board
+        this.state.board,
+        ks,
+        qs
       );
       this.setState({ legalSquares: legalSquares });
     } else console.log("no piece to determine moveset for");
@@ -471,6 +569,7 @@ class ChessboardBase extends Component {
             from: {this.state.letterMap[this.state.sourceCoords[0]]}
             {this.state.sourceCoords[1] + 1}
           </h1>
+          <h1>{this.state.board}</h1>
           <h1>white king on {this.state.whiteKingCoords}</h1>
           <h1>black king on {this.state.blackKingCoords}</h1>
           <div class="row" ref={this.setWrapperRef}>
