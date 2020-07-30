@@ -139,7 +139,6 @@ class ChessboardBase extends Component {
 
   handleClickOutside = (event) => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      console.log("clicked outside board");
       this.setState({ currPiece: 0 });
     }
   };
@@ -155,7 +154,8 @@ class ChessboardBase extends Component {
           console.log("can move");
           this.setState({ currPiece: piece }); // update picked up piece
           this.setState({ sourceCoords: coords }); // remember where piece was picked up
-          this.setLegalSquares(coords, piece); // calculate legal moves
+          var ls = this.setLegalSquares(coords, piece); // calculate legal moves
+          this.setState({ legalSquares: ls});
         } else console.log("can't move");
       }
 
@@ -169,7 +169,8 @@ class ChessboardBase extends Component {
           console.log("can move");
           this.setState({ currPiece: piece }); // update picked up piece
           this.setState({ sourceCoords: coords }); // remember where piece was picked up
-          this.setLegalSquares(coords, piece); // calculate legal moves
+          var ls = this.setLegalSquares(coords, piece); // calculate legal moves
+          this.setState({ legalSquares: ls});
         } else console.log("can't move");
       }
     }
@@ -219,33 +220,45 @@ class ChessboardBase extends Component {
       .set(this.state.promotedPiece);
     this.setState({ promotedPiece: 0 });
     var currentMover = this.state.currentMover.split("_")[0];
-    console.log(currentMover + "currentmover!!!");
-    console.log(currentMover);
+    this.setState({currentMover: currentMover});
     var nextMover = currentMover === "white" ? "black" : "white";
+    // currentMover hasn't changed
     if(nextMover === "white"){
       // checkmate? if so, show alert and end game
-      if(moveCalc.isCheckmated(this.state.whiteKingCoords, "white", this.state.board)){
-        this.checkmate.set("white");
+      if(this.isStalemated()){
         // remove right to move pieces from both sides
         this.database.ref("game_example/white_id_old").set(this.props.whiteId);
         this.database.ref("game_example/black_id_old").set(this.props.blackId);
         this.database.ref("game_example/white_id").set(-1);
         this.database.ref("game_example/black_id").set(-1);
-        // alert victory
-        alert("Black wins!");
+        if(moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", this.state.board)) {
+          // alert victory
+          this.checkmate.set("black");
+          alert("Black wins!");
+        }
+        else{
+          this.checkmate.set("draw");
+          alert("Draw!")
+        }
       }
     }
     else{
       // checkmate? if so, show alert and end game
-      if(moveCalc.isCheckmated(this.state.blackKingCoords, "black", this.state.board)){
-        this.checkmate.set("white");
+      if(this.isStalemated()){
         // remove right to move pieces from both sides
         this.database.ref("game_example/white_id_old").set(this.props.whiteId);
         this.database.ref("game_example/black_id_old").set(this.props.blackId);
         this.database.ref("game_example/white_id").set(-1);
         this.database.ref("game_example/black_id").set(-1);
-        // alert victory
-        alert("White wins!");
+        if(moveCalc.isUnderCheck(this.state.blackKingCoords, "black", this.state.board)) {
+          // alert victory
+          this.checkmate.set("white");
+          alert("White wins!");
+        }
+        else{
+          this.checkmate.set("draw");
+          alert("Draw!")
+        }
       }
     }
     this.setState({ currPiece: 0 });
@@ -255,7 +268,7 @@ class ChessboardBase extends Component {
   handleMove = (coords) => {
     console.log("inside handle move, coords are " + coords);
     // if legal move, modify board state and change current mover to opposite color
-    if (this.moveIsLegal(coords)) {
+    if (this.moveIsLegal(coords, this.state.currPiece, this.state.sourceCoords, this.state.legalSquares, false)) {
       this.database
         .ref("games/game-ID/board/" + coords[0] + "/" + coords[1])
         .set(this.state.currPiece);
@@ -277,7 +290,6 @@ class ChessboardBase extends Component {
           coords[0] === 7)
       ) {
         var newMover = this.state.currentMover + "_promo_pending";
-        console.log(newMover + "new mover???");
         this.mover.set(newMover);
         this.promoCoords.set("" + coords[0] + " " + coords[1]);
         this.openPromotionMenu(this.state.currentMover);
@@ -326,15 +338,22 @@ class ChessboardBase extends Component {
             this.white_ks.set(false);
 
           // checkmate? if so, show alert and end game
-          if(moveCalc.isCheckmated(this.state.blackKingCoords, "black", this.state.board)){
-            this.checkmate.set("white");
+          console.log("white just moved, about to call is stalemate")
+          if(this.isStalemated()){
             // remove right to move pieces from both sides
             this.database.ref("game_example/white_id_old").set(this.props.whiteId);
             this.database.ref("game_example/black_id_old").set(this.props.blackId);
             this.database.ref("game_example/white_id").set(-1);
             this.database.ref("game_example/black_id").set(-1);
-            // alert victory
-            alert("White wins!");
+            if(moveCalc.isUnderCheck(this.state.blackKingCoords, "black", this.state.board)) {
+              // alert victory
+              this.checkmate.set("white");
+              alert("White wins!");
+            }
+            else {
+              this.checkmate.set("draw");
+              alert("Draw!");
+            }
           }
 
           
@@ -383,16 +402,21 @@ class ChessboardBase extends Component {
             this.black_ks.set(false);
 
           //checkmate? if so, show alert and end game
-          if(moveCalc.isCheckmated(this.state.whiteKingCoords, "white", this.state.board)){
-            console.log("BLACKCHECKMATE")
-            this.checkmate.set("black");
+          if(this.isStalemated()){
             // remove right to move pieces from both sides
             this.database.ref("game_example/white_id_old").set(this.props.whiteId);
             this.database.ref("game_example/black_id_old").set(this.props.blackId);
             this.database.ref("game_example/white_id").set(-1);
             this.database.ref("game_example/black_id").set(-1);
-            // alert victory
-            alert("Black wins!");
+            if(moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", this.state.board)){
+              // alert victory
+              this.checkmate.set("black");
+              alert("Black wins!");
+            }
+            else{
+              this.checkmate.set("draw");
+              alert("Draw!");
+            }
           }
 
           this.setState({ currPiece: 0 });
@@ -407,65 +431,80 @@ class ChessboardBase extends Component {
     }
   };
 
-  moveIsLegal = (coords) => {
+  moveIsLegal = (coords, piece, source, ls, checkStalemate) => {
     var i, current;
-    for (i = 0; i < this.state.legalSquares.length; i++) {
-      current = this.state.legalSquares[i];
+    for (i = 0; i < ls.length; i++) {
+      current = ls[i];
       // pending destination is legal
       if (coords[0] == current[0] && coords[1] == current[1]) {
         // finding legal squares for a king move involves check logic, don't need to make sure king won't be under check after this move
-        if (this.state.currPiece === 6 || this.state.currPiece === 12)
-          return true;
+        if (piece === 6 || piece === 12){
+          if(!checkStalemate)
+            return true;
+          else{
+            var tempBoard = this.state.board;
+            var oldPiece = tempBoard[coords[0]][coords[1]];
+            tempBoard[source[0]][source[1]] = 0;
+            tempBoard[coords[0]][coords[1]] = piece;
+            var check;
+            if(this.state.currentMover === "white")
+              check = !moveCalc.isUnderCheck(this.state.blackKingCoords, "black", tempBoard);
+            else
+              check = !moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", tempBoard);
+            if(!check || checkStalemate){
+              tempBoard[source[0]][source[1]] = piece;
+              tempBoard[coords[0]][coords[1]] = oldPiece;
+            }
+            return check;
+          }
+        }
         // check if this move will leave the king in check
+        console.log("inside moveislegal current mover is " + this.state.currentMover)
         if (this.state.currentMover === "white") {
           // create the move on a temporary board and see if king is under check in that board
+          console.log(coords)
+          console.log(source)
+          console.log(piece)
           var tempBoard = this.state.board;
-          tempBoard[this.state.sourceCoords[0]][this.state.sourceCoords[1]] = 0;
-          tempBoard[coords[0]][coords[1]] = this.state.currPiece;
-          console.log(
-            moveCalc.isUnderCheck(
-              this.state.whiteKingCoords,
-              this.state.currentMover,
-              tempBoard
-            )
-          );
-          console.log(coords[0] + " " + coords[1]);
+          console.log("temp[board coordinates " + tempBoard[4][2] + " " + tempBoard[4][3])
+          console.log("actual board coordiantes" + tempBoard[4][2] + " " + tempBoard[4][3])
+          var oldPiece = tempBoard[coords[0]][coords[1]];
+          tempBoard[source[0]][source[1]] = 0;
+          tempBoard[coords[0]][coords[1]] = piece;
+          console.log("temp[board coordinates " + tempBoard[4][2] + " " + tempBoard[4][3])
+          console.log("actual board coordiantes" + tempBoard[4][2] + " " + tempBoard[4][3])
+          var check;
           // return true if not under check
-          return (
-            moveCalc.isUnderCheck(
-              this.state.whiteKingCoords,
-              this.state.currentMover,
-              tempBoard
-            ).length === 0
-          );
+          if(!checkStalemate)
+            check = !moveCalc.isUnderCheck(this.state.whiteKingCoords, this.state.currentMover, tempBoard)
+          else
+            check = !moveCalc.isUnderCheck(this.state.blackKingCoords, "black", tempBoard);
+          console.log("undercheck returns" + moveCalc.isUnderCheck(this.state.blackKingCoords, "black", tempBoard))
+          console.log("black king coords are " + this.state.blackKingCoords)
+          if(!check || checkStalemate){
+            tempBoard[source[0]][source[1]] = piece;
+            tempBoard[coords[0]][coords[1]] = oldPiece;
+          }
+          console.log(checkStalemate)
+          console.log("check is " + check)
+          return check;
         } else {
           // create the move on a temporary board and see if king is under check in that board
           var tempBoard = this.state.board;
-          tempBoard[this.state.sourceCoords[0]][this.state.sourceCoords[1]] = 0;
-          tempBoard[coords[0]][coords[1]] = this.state.currPiece;
-          console.log(
-            moveCalc.isUnderCheck(
-              this.state.blackKingCoords,
-              this.state.currentMover,
-              tempBoard
-            )
-          );
-          console.log(coords[0] + " " + coords[1]);
-          console.log(
-            moveCalc.isUnderCheck(
-              this.state.blackKingCoords,
-              this.state.currentMover,
-              tempBoard
-            ).length
-          );
+          var oldPiece = tempBoard[coords[0]][coords[1]];
+          tempBoard[source[0]][source[1]] = 0;
+          tempBoard[coords[0]][coords[1]] = piece;
+          var check;
           // return true if not under check
-          return (
-            moveCalc.isUnderCheck(
-              this.state.blackKingCoords,
-              this.state.currentMover,
-              tempBoard
-            ).length === 0
-          );
+          if(!checkStalemate)
+            check = !moveCalc.isUnderCheck(this.state.blackKingCoords, this.state.currentMover, tempBoard)
+          else
+            check = !moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", tempBoard);
+          if(!check || checkStalemate){
+            tempBoard[source[0]][source[1]] = piece;
+            tempBoard[coords[0]][coords[1]] = oldPiece;
+          }
+          return check;
         }
       }
     }
@@ -478,14 +517,13 @@ class ChessboardBase extends Component {
 
     // pawn move
     if (piece === 1 || piece === 7) {
-      console.log("AAAAAAAAAAAA")
       var color = piece === 1 ? "white" : "black";
       var legalSquares = moveCalc.calculatePawnMoves(
         coords,
         color,
         this.state.board
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     }
 
     // knight move
@@ -496,7 +534,7 @@ class ChessboardBase extends Component {
         color,
         this.state.board
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     }
 
     // bishop move
@@ -507,7 +545,7 @@ class ChessboardBase extends Component {
         color,
         this.state.board
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     }
 
     // rook move
@@ -518,7 +556,7 @@ class ChessboardBase extends Component {
         color,
         this.state.board
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     }
 
     // queen move
@@ -529,7 +567,7 @@ class ChessboardBase extends Component {
         color,
         this.state.board
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     }
 
     // king move
@@ -537,7 +575,6 @@ class ChessboardBase extends Component {
       var color = piece === 6 ? "white" : "black";
       var ks = this.state.currentMover === "white" ? this.state.whiteCastleKs : this.state.blackCastleKs;
       var qs = this.state.currentMover === "white" ? this.state.whiteCastleQs : this.state.blackCastleQs;
-      console.log("aaaaaaaaaaaaaaaaaaaaa calculating king moves, piece number at 0,4 is " + this.state.board)
       var legalSquares = moveCalc.calculateKingMoves(
         coords,
         color,
@@ -545,9 +582,55 @@ class ChessboardBase extends Component {
         ks,
         qs
       );
-      this.setState({ legalSquares: legalSquares });
+      return legalSquares;
     } else console.log("no piece to determine moveset for");
   };
+
+  isStalemated() {
+    console.log("inside stalemated, current mover is " + this.state.currentMover + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    if(this.state.currentMover === "white" || this.state.currentMover === "white_promo_pending") {
+      for(let r = 0; r < this.state.board.length; r++){
+        for(let c = 0; c < this.state.board.length; c++){
+          // check if piece is white
+          var piece = this.state.board[r][c];
+          if(piece >= 7 && piece <= 12) {
+            console.log("the current piece to check for legal moves is at " + r + " " + c + " and the piece is " + piece)
+            // check if piece can legally move, not stalemate if so
+            var ls = this.setLegalSquares([r, c], piece);
+            console.log("it's legal destinations are: " + ls);
+            for(let i = 0; i < ls.length; i++){
+              console.log(this.moveIsLegal(ls[i], piece, [r,c], ls, true) + " " + ls[i] + " " + r + " " + c)
+              if(this.moveIsLegal(ls[i], piece, [r,c], ls, true))
+                return false;
+            }
+          }
+        }
+      }
+
+    }
+    else {
+      for(let r = 0; r < this.state.board.length; r++){
+        for(let c = 0; c < this.state.board.length; c++){
+          // check if piece is black
+          var piece = this.state.board[r][c];
+          if(piece >= 1 && piece <= 6) {
+            console.log("the current piece to check for legal moves is at " + r + " " + c + " and the piece is " + piece)
+            // check if piece can legally move, not stalemate if so
+            var ls = this.setLegalSquares([r, c], piece);
+            console.log("it's legal destinations are: " + ls);
+            for(let i = 0; i < ls.length; i++){
+              if(this.moveIsLegal(ls[i], piece, [r,c], ls, true))
+                return false;
+            }
+          }
+        }
+      }
+    }
+
+    // no legal move found
+    return true;
+  }
+  
 
   render() {
     let promoMenu;

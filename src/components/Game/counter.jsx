@@ -94,12 +94,15 @@ class CounterWithUID extends Component {
   render() {
     let winMenu;
     if (this.state.checkmate !== 0) {
-      winMenu =
-        this.state.checkmate === "white" ? (
-          <h1 class="head">WHITE VICTORY</h1>
-        ) : (
-          <h1 class="head">BLACK VICTORY</h1>
-        );
+      if(this.state.checkmate === "draw")
+        winMenu = <h1 class="head">DRAW</h1>
+      else
+        winMenu =
+          this.state.checkmate === "white" ? (
+            <h1 class="head">WHITE VICTORY</h1>
+          ) : (
+            <h1 class="head">BLACK VICTORY</h1>
+          );
     }
     return (
       <React.Fragment>
