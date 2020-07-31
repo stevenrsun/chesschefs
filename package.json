@@ -10,6 +10,7 @@
     "firebase": "^7.14.6",
     "firebaseui": "^4.5.1",
     "react": "^16.13.1",
+    "react-chat-window": "^1.2.1",
     "react-dom": "^16.13.1",
     "react-native-web": "^0.12.3",
     "react-router-dom": "^5.2.0",

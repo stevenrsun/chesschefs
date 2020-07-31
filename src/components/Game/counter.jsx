@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { withFirebase } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
+import Chat from "./chat";
 
 const Counter = ({ authUser }) => (
   <div>
@@ -153,6 +154,11 @@ class CounterWithUID extends Component {
         >
           Increment Button Two
         </button>
+        <Chat 
+          uid={this.props.uid}
+          whiteId={this.state.whiteId}
+          blackId={this.state.blackId}
+        />
 
         {winMenu}
         <div class="row">

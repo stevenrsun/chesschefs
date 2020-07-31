@@ -49,6 +49,14 @@ class ChessboardBase extends Component {
         "Q",
         "K",
       ],
+      indicatorMap: [[0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0]],
       letterMap: ["a", "b", "c", "d", "e", "f", "g", "h"],
       rowMap: ["8", "7", "6", "5", "4", "3", "2", "1"],
       board: [],
@@ -176,7 +184,9 @@ class ChessboardBase extends Component {
     // pick up a piece if no piece picked up currently
     else if (this.state.currPiece === 0) {
       // highlight piece
-      this.database.ref("games/game-ID/move_markers/" + coords[0] + "/" + coords[1]).set(3);
+      let indMap = [...this.state.indicatorMap];
+      indMap[coords[0]][coords[1]] = 3;
+      this.setState({indicatorMap: indMap});
       // white move
       if (piece <= 6 && piece >= 1 && this.state.currentMover === "white") {
         if (this.props.uid === this.props.whiteId) {
@@ -189,10 +199,16 @@ class ChessboardBase extends Component {
           console.log("ngs " + ls[0])
           if(ls.length > 0 && !this.pieceIsPinned(coords))
             for(let i = 0; i < ls.length; i++){
-              if(this.state.board[ls[i][0]][ls[i][1]] === 0)
-                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(1);
-              else
-                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(2);
+              if(this.state.board[ls[i][0]][ls[i][1]] === 0){
+                let indMap = [...this.state.indicatorMap];
+                indMap[ls[i][0]][ls[i][1]] = 1;
+                this.setState({indicatorMap: indMap});
+              }
+              else {
+                let indMap = [...this.state.indicatorMap];
+                indMap[ls[i][0]][ls[i][1]] = 2;
+                this.setState({indicatorMap: indMap});
+              }
             }
         } else console.log("can't move");
       }
@@ -213,10 +229,16 @@ class ChessboardBase extends Component {
           if(ls.length > 0 && !this.pieceIsPinned(coords))
             for(let i = 0; i < ls.length; i++){
               console.log("fgs" + this.state.board[ls[i][0]][ls[i][1]] + " " + ls[i])
-              if(this.state.board[ls[i][0]][ls[i][1]] === 0)
-                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(1);
-              else
-                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(2);
+              if(this.state.board[ls[i][0]][ls[i][1]] === 0){
+                let indMap = [...this.state.indicatorMap];
+                indMap[ls[i][0]][ls[i][1]] = 1;
+                this.setState({indicatorMap: indMap});
+              }
+              else{
+                let indMap = [...this.state.indicatorMap];
+                indMap[ls[i][0]][ls[i][1]] = 2;
+                this.setState({indicatorMap: indMap});
+              }
             }
         } else console.log("can't move");
       }
@@ -807,16 +829,24 @@ class ChessboardBase extends Component {
   }
 
   resetMoveIndicators = () => {
-    this.database
-        .ref("games/game-ID/move_markers")
-        .set([[0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0]]);
+    // this.database
+    //     .ref("games/game-ID/move_markers")
+    //     .set([[0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0],
+    //           [0, 0, 0, 0, 0, 0, 0, 0]]);
+    this.setState({indicatorMap: [[0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]]})
   }
   
 
@@ -829,6 +859,35 @@ class ChessboardBase extends Component {
         ) : (
           <PromoMenu color={"black"} onClick={this.onPromotionMenuClick} />
         );
+    }
+    let board = [];
+    for(let c = 0; c < this.state.board.length; c++){
+      let col = [];
+      for(let r = 0; r < this.state.board.length; r++){
+        if((r + c) % 2 == 0)
+          col.push(
+            <Square
+              isLight={true}
+              onClick={this.handleClick}
+              coords={[r, c]}
+              indicator={this.state.indicatorMap[r][c]}
+            />
+          )
+        else
+          col.push(
+            <Square
+              isLight={false}
+              onClick={this.handleClick}
+              coords={[r, c]}
+              indicator={this.state.indicatorMap[r][c]}
+            />
+          )
+      }
+      board.push(
+        <div class="col-sm-1" style={this.styles.square}>
+          {col}
+        </div>
+      )
     }
     return (
       <div>
@@ -851,343 +910,7 @@ class ChessboardBase extends Component {
           <h1>white king on {this.state.whiteKingCoords}</h1>
           <h1>black king on {this.state.blackKingCoords}</h1>
           <div class="row" ref={this.setWrapperRef}>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[0, 0]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[1, 0]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[2, 0]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[3, 0]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[4, 0]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[5, 0]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[6, 0]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[7, 0]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[0, 1]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[1, 1]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[2, 1]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[3, 1]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[4, 1]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[5, 1]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[6, 1]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[7, 1]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[0, 2]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[1, 2]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[2, 2]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[3, 2]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[4, 2]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[5, 2]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[6, 2]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[7, 2]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[0, 3]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[1, 3]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[2, 3]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[3, 3]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[4, 3]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[5, 3]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[6, 3]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[7, 3]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[0, 4]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[1, 4]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[2, 4]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[3, 4]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[4, 4]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[5, 4]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[6, 4]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[7, 4]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[0, 5]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[1, 5]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[2, 5]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[3, 5]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[4, 5]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[5, 5]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[6, 5]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[7, 5]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[0, 6]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[1, 6]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[2, 6]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[3, 6]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[4, 6]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[5, 6]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[6, 6]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[7, 6]}
-              />
-            </div>
-            <div class="col-sm-1" style={this.styles.square}>
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[0, 7]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[1, 7]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[2, 7]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[3, 7]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[4, 7]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[5, 7]}
-              />
-              <Square
-                isLight={false}
-                onClick={this.handleClick}
-                coords={[6, 7]}
-              />
-              <Square
-                isLight={true}
-                onClick={this.handleClick}
-                coords={[7, 7]}
-              />
-            </div>
-            <div class="col-m-3">{promoMenu}</div>
+            {board}
           </div>
         </div>
       </div>

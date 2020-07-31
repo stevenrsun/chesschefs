@@ -20,8 +20,8 @@ import green_dot from "../pictures/Indicators/green_dot.png"
 import red_square from "../pictures/Indicators/red_square.jpg";
 import highlight_square from "../pictures/Indicators/highlight_square.png";
 
-const Square = ({isLight, onClick, coords}) => (
-    isLight ? <LightSquareFinal onClick={onClick} coords={coords}/> : <DarkSquareFinal onClick={onClick} coords={coords}/>
+const Square = ({isLight, onClick, coords, indicator}) => (
+    isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator}/> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator}/>
 )
 
 class LightSquare extends Component {
@@ -34,7 +34,6 @@ class LightSquare extends Component {
 
         this.state = { 
             piece: 0,
-            indicator: 0,
             indicatorMap: [light_square, green_dot, red_square, highlight_square],
             pieceMap: [light_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
@@ -78,7 +77,7 @@ class LightSquare extends Component {
 
     render() { 
         let square;
-        if(this.state.indicator === 0){
+        if(this.props.indicator === 0){
             square = 
             <View style={this.styles.container}>
                 <ImageBackground source={light_square} style={this.styles.image}>
@@ -91,7 +90,7 @@ class LightSquare extends Component {
             <View style={this.styles.container}>
                 <ImageBackground source={light_square} style={this.styles.image}>
                     <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                        <img src={this.state.indicatorMap[this.state.indicator]} style={this.styles.indicator}/>
+                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}/>
                     </ImageBackground>
                 </ImageBackground>
             </View>
@@ -114,7 +113,6 @@ class DarkSquare extends Component {
         
         this.state = { 
             piece: 0,
-            indicator: 0,
             indicatorMap: [light_square, green_dot, red_square, highlight_square],
             pieceMap: [dark_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
@@ -158,7 +156,7 @@ class DarkSquare extends Component {
     
     render() { 
         let square;
-        if(this.state.indicator === 0){
+        if(this.props.indicator === 0){
             square = 
             <View style={this.styles.container}>
                 <ImageBackground source={dark_square} style={this.styles.image}>
@@ -171,7 +169,7 @@ class DarkSquare extends Component {
             <View style={this.styles.container}>
                 <ImageBackground source={dark_square} style={this.styles.image}>
                     <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                        <img src={this.state.indicatorMap[this.state.indicator]} style={this.styles.indicator}/>
+                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}/>
                     </ImageBackground>
                 </ImageBackground>
             </View>
