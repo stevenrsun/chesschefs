@@ -15,6 +15,10 @@ import black_bishop from "../pictures/Pieces/BBishop.png";
 import black_rook from "../pictures/Pieces/BRook.png";
 import black_queen from "../pictures/Pieces/BQueen.png";
 import black_king from "../pictures/Pieces/BKing.png";
+import green_dot from "../pictures/Indicators/green_dot.png"
+//import red_x from "../pictures/Indicators/red_x.jpg";
+import red_square from "../pictures/Indicators/red_square.jpg";
+import highlight_square from "../pictures/Indicators/highlight_square.png";
 
 const Square = ({isLight, onClick, coords}) => (
     isLight ? <LightSquareFinal onClick={onClick} coords={coords}/> : <DarkSquareFinal onClick={onClick} coords={coords}/>
@@ -26,9 +30,12 @@ class LightSquare extends Component {
 
         this.database = this.props.firebase.db;
         this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
+        this.indicator = this.database.ref('games/game-ID/move_markers/' + this.props.coords[0] + "/" + this.props.coords[1]);
 
         this.state = { 
             piece: 0,
+            indicator: 0,
+            indicatorMap: [light_square, green_dot, red_square, highlight_square],
             pieceMap: [light_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
     }
@@ -48,6 +55,11 @@ class LightSquare extends Component {
         piece: {
             height: '64px',
             width: '64px'
+        },
+        indicator: {
+            height: '64px',
+            width: '64px',
+            opacity: 0.5
         }
     }
 
@@ -57,16 +69,36 @@ class LightSquare extends Component {
                 piece: snap.val()
             });
         });
+        this.indicator.on("value", (snap) => {
+            this.setState({
+                indicator: snap.val()
+            });
+        });
     }
 
     render() { 
+        let square;
+        if(this.state.indicator === 0){
+            square = 
+            <View style={this.styles.container}>
+                <ImageBackground source={light_square} style={this.styles.image}>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                </ImageBackground>
+            </View>
+        }
+        else {
+            square = 
+            <View style={this.styles.container}>
+                <ImageBackground source={light_square} style={this.styles.image}>
+                    <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
+                        <img src={this.state.indicatorMap[this.state.indicator]} style={this.styles.indicator}/>
+                    </ImageBackground>
+                </ImageBackground>
+            </View>
+        }
         return ( 
             <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, this.state.piece, e)}>
-                <View style={this.styles.container}>
-                    <ImageBackground source={light_square} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
-                    </ImageBackground>
-                </View>
+                {square}
             </a>
          );
     }
@@ -78,9 +110,12 @@ class DarkSquare extends Component {
 
         this.database = this.props.firebase.db;
         this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
+        this.indicator = this.database.ref('games/game-ID/move_markers/' + this.props.coords[0] + "/" + this.props.coords[1]);
         
         this.state = { 
             piece: 0,
+            indicator: 0,
+            indicatorMap: [light_square, green_dot, red_square, highlight_square],
             pieceMap: [dark_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
     }
@@ -100,6 +135,11 @@ class DarkSquare extends Component {
         piece: {
             height: '64px',
             width: '64px'
+        },
+        indicator: {
+            height: '64px',
+            width: '64px',
+            opacity: 0.5
         }
     }
 
@@ -109,16 +149,36 @@ class DarkSquare extends Component {
                 piece: snap.val()
             });
         });
+        this.indicator.on("value", (snap) => {
+            this.setState({
+                indicator: snap.val()
+            });
+        });
     }
     
     render() { 
+        let square;
+        if(this.state.indicator === 0){
+            square = 
+            <View style={this.styles.container}>
+                <ImageBackground source={dark_square} style={this.styles.image}>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                </ImageBackground>
+            </View>
+        }
+        else {
+            square = 
+            <View style={this.styles.container}>
+                <ImageBackground source={dark_square} style={this.styles.image}>
+                    <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
+                        <img src={this.state.indicatorMap[this.state.indicator]} style={this.styles.indicator}/>
+                    </ImageBackground>
+                </ImageBackground>
+            </View>
+        }
         return ( 
             <a href="#" onClick = {(e) => this.props.onClick(this.props.coords, this.state.piece, e)}>
-                <View style={this.styles.container}>
-                    <ImageBackground source={dark_square} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
-                    </ImageBackground>
-                </View>
+                {square}
             </a>
          );
     }

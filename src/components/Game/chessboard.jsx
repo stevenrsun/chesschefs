@@ -15,6 +15,8 @@ class ChessboardBase extends Component {
 
     this.database = this.props.firebase.db;
     this.board = this.database.ref("games/game-ID/board");
+    this.moveLog = this.database.ref("games/game-ID/move_log");
+    this.moveNum = this.database.ref("games/game-ID/move_num");
     this.mover = this.database.ref("games/game-ID/current_mover");
     this.piece = this.database.ref("games/game-ID/current_piece");
     this.whiteKing = this.database.ref("games/game-ID/white_king");
@@ -26,26 +28,32 @@ class ChessboardBase extends Component {
     this.white_qs = this.database.ref("games/game-ID/white_castle_qs");
     this.black_ks = this.database.ref("games/game-ID/black_castle_ks");
     this.black_qs = this.database.ref("games/game-ID/black_castle_qs");
+    this.pawnTwoForward = this.database.ref("games/game-ID/pawn_two_forward");
+    this.whiteIdOld = this.database.ref("game_example/white_id_old");
+    this.blackIdOld = this.database.ref("game_example/black_id_old");
 
     this.state = {
       currPiece: 0,
       pieceMap: [
         "None",
-        "Pawn (W)",
-        "Knight (W)",
-        "Bishop (W)",
-        "Rook (W)",
-        "Queen (W)",
-        "King (W)",
-        "Pawn (B)",
-        "Knight (B)",
-        "Bishop (B)",
-        "Rook (B)",
-        "Queen (B)",
-        "King (B)",
+        "",
+        "N",
+        "B",
+        "R",
+        "Q",
+        "K",
+        "",
+        "N",
+        "B",
+        "R",
+        "Q",
+        "K",
       ],
       letterMap: ["a", "b", "c", "d", "e", "f", "g", "h"],
+      rowMap: ["8", "7", "6", "5", "4", "3", "2", "1"],
       board: [],
+      moveLog: [],
+      moveNum: 0,
       movePool: [],
       legalSquares: [],
       sourceCoords: [],
@@ -59,7 +67,10 @@ class ChessboardBase extends Component {
       whiteCastleKs: true,
       whiteCastleQs: true,
       blackCastleKs: true,
-      blackCastleQs: true
+      blackCastleQs: true,
+      pawnTwoForward: -1,
+      whiteIdOld: "",
+      blackIdOld: "",
     };
   }
   styles = {
@@ -77,6 +88,12 @@ class ChessboardBase extends Component {
     document.addEventListener("mousedown", this.handleClickOutside);
     this.board.on("value", (snap) => {
       this.setState({ board: snap.val() });
+    });
+    this.moveLog.on("value", (snap) => {
+      this.setState({ moveLog: snap.val() });
+    });
+    this.moveNum.on("value", (snap) => {
+      this.setState({ moveNum: snap.val() });
     });
     this.mover.on("value", (snap) => {
       this.setState({ currentMover: snap.val() });
@@ -123,6 +140,15 @@ class ChessboardBase extends Component {
     this.black_qs.on("value", (snap) => {
       this.setState({blackCastleQs: snap.val()});
     });
+    this.pawnTwoForward.on("value", (snap) => {
+      this.setState({pawnTwoForward: snap.val()});
+    });
+    this.whiteIdOld.on("value", (snap) => {
+      this.setState({whiteIdOld: snap.val()});
+    });
+    this.blackIdOld.on("value", (snap) => {
+      this.setState({blackIdOld: snap.val()});
+    });
   }
 
   sleep = (milliseconds) => {
@@ -140,6 +166,7 @@ class ChessboardBase extends Component {
   handleClickOutside = (event) => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.setState({ currPiece: 0 });
+      this.resetMoveIndicators();
     }
   };
 
@@ -148,6 +175,8 @@ class ChessboardBase extends Component {
     if (piece === 0) console.log("blank square, can't move");
     // pick up a piece if no piece picked up currently
     else if (this.state.currPiece === 0) {
+      // highlight piece
+      this.database.ref("games/game-ID/move_markers/" + coords[0] + "/" + coords[1]).set(3);
       // white move
       if (piece <= 6 && piece >= 1 && this.state.currentMover === "white") {
         if (this.props.uid === this.props.whiteId) {
@@ -156,6 +185,15 @@ class ChessboardBase extends Component {
           this.setState({ sourceCoords: coords }); // remember where piece was picked up
           var ls = this.setLegalSquares(coords, piece); // calculate legal moves
           this.setState({ legalSquares: ls});
+          // set indicator for where moves are legal
+          console.log("ngs " + ls[0])
+          if(ls.length > 0 && !this.pieceIsPinned(coords))
+            for(let i = 0; i < ls.length; i++){
+              if(this.state.board[ls[i][0]][ls[i][1]] === 0)
+                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(1);
+              else
+                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(2);
+            }
         } else console.log("can't move");
       }
 
@@ -171,6 +209,15 @@ class ChessboardBase extends Component {
           this.setState({ sourceCoords: coords }); // remember where piece was picked up
           var ls = this.setLegalSquares(coords, piece); // calculate legal moves
           this.setState({ legalSquares: ls});
+          // set indicator for where moves are legal
+          if(ls.length > 0 && !this.pieceIsPinned(coords))
+            for(let i = 0; i < ls.length; i++){
+              console.log("fgs" + this.state.board[ls[i][0]][ls[i][1]] + " " + ls[i])
+              if(this.state.board[ls[i][0]][ls[i][1]] === 0)
+                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(1);
+              else
+                this.database.ref("games/game-ID/move_markers/" + ls[i][0] + "/" + ls[i][1]).set(2);
+            }
         } else console.log("can't move");
       }
     }
@@ -179,6 +226,8 @@ class ChessboardBase extends Component {
     // move if so, drop piece if not
     if (this.state.currPiece !== 0) {
       this.handleMove(coords);
+      // reset move indicator visuals
+      this.resetMoveIndicators();
     }
     console.log("clicked on a square: " + coords[0] + ", " + coords[1]);
   };
@@ -266,9 +315,14 @@ class ChessboardBase extends Component {
   };
 
   handleMove = (coords) => {
-    console.log("inside handle move, coords are " + coords);
+    console.log("inside handle move, coords are " + coords[0] + coords[1]);
+    console.log("the piece captured would be " + this.state.board[coords[0]][coords[1]])
+    let capturedPiece = this.state.board[coords[0]][coords[1]];
     // if legal move, modify board state and change current mover to opposite color
     if (this.moveIsLegal(coords, this.state.currPiece, this.state.sourceCoords, this.state.legalSquares, false)) {
+      let castled = false;
+      let enPassant = false;
+      console.log("capturedpiece is " + capturedPiece)
       this.database
         .ref("games/game-ID/board/" + coords[0] + "/" + coords[1])
         .set(this.state.currPiece);
@@ -295,12 +349,25 @@ class ChessboardBase extends Component {
         this.openPromotionMenu(this.state.currentMover);
       } else {
         if (this.state.currentMover === "white") {
+          // capture a pawn if en passant was performed
+          if(this.state.currPiece === 1 && coords[0] === 2 && this.state.board[coords[0] + 1][coords[1]] === 7 && capturedPiece === 0){
+            this.database
+              .ref("games/game-ID/board/" + (coords[0] + 1) + "/" + coords[1])
+              .set(0);
+            enPassant = true;
+          }
+          // track if a pawn has moved two squares forward
+          if(this.state.currPiece === 1 && this.state.sourceCoords[0] === 6 && coords[0] === 4)
+            this.pawnTwoForward.set(coords[1]);
+          // reset pawn two forward tracking variable if needed
+          else if(this.state.pawnTwoForward != -1)
+            this.pawnTwoForward.set(-1);
           // update king coords if king is being moved
           if (this.state.currPiece === 6) {
             this.whiteKing.set("" + coords[0] + " " + coords[1]);
             if(this.state.whiteCastleKs || this.state.whiteCastleQs){
               // move rook if it was a castle move (can castle = true, moved piece = king)
-              if(coords[1] === 6){
+              if(coords[1] === 6 && this.state.whiteCastleKs){
                 this.database
                   .ref("games/game-ID/board/" + 7 + "/" + 5)
                   .set(4);
@@ -312,8 +379,11 @@ class ChessboardBase extends Component {
                       7
                   )
                   .set(0);
+                // track castle in movelog
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("O-O");
+                castled = true;
               }
-              else if(coords[1] === 2){
+              else if(coords[1] === 2 && this.state.whiteCastleQs){
                 this.database
                   .ref("games/game-ID/board/" + 7 + "/" + 3)
                   .set(4);
@@ -325,6 +395,9 @@ class ChessboardBase extends Component {
                       0
                   )
                   .set(0);
+                // track castle in movelog
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("O-O-O");
+                castled = true;
               }
 
               this.white_ks.set(false);
@@ -336,6 +409,22 @@ class ChessboardBase extends Component {
             this.white_qs.set(false);
           else if(this.state.currPiece === 4 && this.state.sourceCoords[0] === 7 && this.state.sourceCoords[1] === 7 && this.state.whiteCastleKs)
             this.white_ks.set(false);
+
+          // update move log for non castle
+          if(!castled){
+            // check if captured piece
+            if(capturedPiece > 0){
+              if(this.state.currPiece != 1)
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.pieceMap[this.state.currPiece] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+              else
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.letterMap[this.state.sourceCoords[1]] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+            }
+            else if(enPassant)
+              this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.letterMap[this.state.sourceCoords[1]] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+            else
+              this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.pieceMap[this.state.currPiece] + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+          }
+          this.moveNum.set(this.state.moveNum + 1);
 
           // checkmate? if so, show alert and end game
           console.log("white just moved, about to call is stalemate")
@@ -360,11 +449,26 @@ class ChessboardBase extends Component {
           this.setState({ currPiece: 0 });
           this.mover.set("black");
         } else {
+          // capture a pawn if en passant was performed
+          if(this.state.currPiece === 7 && coords[0] === 5 && this.state.board[coords[0] - 1][coords[1]] === 1 && capturedPiece === 0){
+            this.database
+              .ref("games/game-ID/board/" + (coords[0] - 1) + "/" + coords[1])
+              .set(0);
+            enPassant = true;
+          }
+          // track if pawn has moved two squares forward
+          if(this.state.currPiece === 7 && this.state.sourceCoords[0] === 1 && coords[0] === 3)
+            this.pawnTwoForward.set(coords[1]);
+          // reset the pawn two forward tracking variable if needed
+          else if(this.state.pawnTwoForward != -1)
+            this.pawnTwoForward.set(-1);
+
+          
           // update king coords if king is being moved
           if (this.state.currPiece === 12) {
             this.blackKing.set("" + coords[0] + " " + coords[1]);
             if(this.state.blackCastleKs || this.state.blackCastleQs){
-              if(coords[1] === 6){
+              if(coords[1] === 6 && this.state.blackCastleKs){
                 this.database
                   .ref("games/game-ID/board/" + 0 + "/" + 5)
                   .set(10);
@@ -376,8 +480,11 @@ class ChessboardBase extends Component {
                       7
                   )
                   .set(0);
+                // track castle in movelog
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("O-O");
+                castled = true;
               }
-              else if(coords[1] === 2){
+              else if(coords[1] === 2 && this.state.blackCastleQs){
                 this.database
                   .ref("games/game-ID/board/" + 0 + "/" + 3)
                   .set(10);
@@ -389,6 +496,9 @@ class ChessboardBase extends Component {
                       0
                   )
                   .set(0);
+                // track castle in movelog
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("O-O-O");
+                castled = true;
               }
 
               this.black_ks.set(false);
@@ -400,6 +510,22 @@ class ChessboardBase extends Component {
             this.black_qs.set(false);
           else if(this.state.currPiece === 10 && this.state.sourceCoords[0] === 0 && this.state.sourceCoords[1] === 7 && this.state.blackCastleKs)
             this.black_ks.set(false);
+
+          // update move log for non castle
+          if(!castled){
+            // check if captured piece
+            if(capturedPiece > 0){
+              if(this.state.currPiece != 7)
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.pieceMap[this.state.currPiece] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+              else
+                this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.letterMap[this.state.sourceCoords[1]] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+            }
+            else if(enPassant)
+              this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.letterMap[this.state.sourceCoords[0]] + "x" + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+            else
+              this.moveLog.child("/" + Math.floor(this.state.moveNum / 2) + "/" + (this.state.moveNum % 2)).set("" + this.state.pieceMap[this.state.currPiece] + this.state.letterMap[coords[1]] + this.state.rowMap[coords[0]]);
+          }
+          this.moveNum.set(this.state.moveNum + 1);
 
           //checkmate? if so, show alert and end game
           if(this.isStalemated()){
@@ -431,6 +557,19 @@ class ChessboardBase extends Component {
     }
   };
 
+  pieceIsPinned = (coords) => {
+    var tempBoard = this.state.board;
+    var piece = tempBoard[coords[0]][coords[1]];
+    tempBoard[coords[0]][coords[1]] = 0;
+    var check;
+    if(this.state.currentMover === "white")
+      check = moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", tempBoard);
+    else
+      check = moveCalc.isUnderCheck(this.state.blackKingCoords, "black", tempBoard);
+    tempBoard[coords[0]][coords[1]] = piece;
+    return check;
+  }
+
   moveIsLegal = (coords, piece, source, ls, checkStalemate) => {
     var i, current;
     for (i = 0; i < ls.length; i++) {
@@ -448,9 +587,9 @@ class ChessboardBase extends Component {
             tempBoard[coords[0]][coords[1]] = piece;
             var check;
             if(this.state.currentMover === "white")
-              check = !moveCalc.isUnderCheck(this.state.blackKingCoords, "black", tempBoard);
+              check = !moveCalc.isUnderCheck(coords, "black", tempBoard);
             else
-              check = !moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", tempBoard);
+              check = !moveCalc.isUnderCheck(coords, "white", tempBoard);
             if(!check || checkStalemate){
               tempBoard[source[0]][source[1]] = piece;
               tempBoard[coords[0]][coords[1]] = oldPiece;
@@ -521,7 +660,8 @@ class ChessboardBase extends Component {
       var legalSquares = moveCalc.calculatePawnMoves(
         coords,
         color,
-        this.state.board
+        this.state.board,
+        this.state.pawnTwoForward
       );
       return legalSquares;
     }
@@ -586,7 +726,7 @@ class ChessboardBase extends Component {
     } else console.log("no piece to determine moveset for");
   };
 
-  isStalemated() {
+  isStalemated = () => {
     console.log("inside stalemated, current mover is " + this.state.currentMover + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     if(this.state.currentMover === "white" || this.state.currentMover === "white_promo_pending") {
       for(let r = 0; r < this.state.board.length; r++){
@@ -630,6 +770,54 @@ class ChessboardBase extends Component {
     // no legal move found
     return true;
   }
+
+  resetBoard = () => {
+    this.checkmate.set(0);
+    this.whiteKing.set("7 4");
+    this.blackKing.set("0 4");
+    this.black_ks.set(true);
+    this.black_qs.set(true);
+    this.white_ks.set(true);
+    this.white_qs.set(true);
+    this.mover.set("white");
+    this.promoMenuDb.set(false);
+    this.moveNum.set(0);
+    this.moveLog.set([[" ", " "]]);
+    this.database
+        .ref("game_example/black_id")
+        .set(
+          this.state.blackIdOld
+        );
+    this.database
+        .ref("game_example/white_id")
+        .set(
+          this.state.whiteIdOld
+        );
+    this.database
+        .ref("games/game-ID/board")
+        .set([[10, 8, 9, 11, 12, 9, 8, 10],
+              [7, 7, 7, 7, 7, 7, 7, 7],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [1, 1, 1, 1, 1, 1, 1, 1],
+              [4, 2, 3, 5, 6, 3, 2, 4]]);
+    this.resetMoveIndicators();
+  }
+
+  resetMoveIndicators = () => {
+    this.database
+        .ref("games/game-ID/move_markers")
+        .set([[0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0]]);
+  }
   
 
   render() {
@@ -645,6 +833,13 @@ class ChessboardBase extends Component {
     return (
       <div>
         <div class="container ml-4">
+          <button
+            type="button"
+            onClick={this.resetBoard}
+            class="btn btn-primary"
+          >
+            Reset Board
+          </button>
           <h1>
             Currently Picked Up: {this.state.pieceMap[this.state.currPiece]}
           </h1>

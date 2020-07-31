@@ -28,6 +28,8 @@ class CounterWithUID extends Component {
     this.white = this.database.ref("game_example").child("white_id");
     this.black = this.database.ref("game_example").child("black_id");
     this.checkmate = this.database.ref("games/game-ID/checkmate");
+    this.moveLog = this.database.ref("games/game-ID/move_log");
+    this.moveNum = this.database.ref("games/game-ID/move_num");
 
     this.state = {
       countOne: 0,
@@ -36,7 +38,10 @@ class CounterWithUID extends Component {
       whiteId: "",
       blackId: "",
 
-      checkmate: 0
+      checkmate: 0,
+
+      moveLog: [],
+      moveNum: 0
     };
   }
 
@@ -46,26 +51,22 @@ class CounterWithUID extends Component {
         checkmate: snap.val(),
       });
     });
-
     this.counterOne.on("value", (snap) => {
       this.setState({
         countOne: snap.val(),
       });
     });
-
     this.counterTwo.on("value", (snap) => {
       this.setState({
         countTwo: snap.val(),
       });
     });
-
     this.white.on("value", (snapshot) => {
       this.setState({
         whiteId: snapshot.val(),
       });
       if (snapshot.val() === 0) this.white.set(this.props.uid);
     });
-
     this.black.on("value", (snapshot) => {
       this.setState({
         blackId: snapshot.val(),
@@ -76,6 +77,12 @@ class CounterWithUID extends Component {
         this.state.whiteId !== this.props.uid
       )
         this.black.set(this.props.uid);
+    });
+    this.moveLog.on("value", (snap) => {
+      this.setState({ moveLog: snap.val() });
+    });
+    this.moveNum.on("value", (snap) => {
+      this.setState({ moveNum: snap.val() });
     });
   }
 
@@ -103,6 +110,16 @@ class CounterWithUID extends Component {
           ) : (
             <h1 class="head">BLACK VICTORY</h1>
           );
+    }
+    let moveLog = [];
+    for(let i = 0; i < this.state.moveLog.length; i++){
+      moveLog.push(
+        <tr>
+          <th scope="row">{i + 1}</th>
+          <td>{this.state.moveLog[i][0]}</td>
+          <td>{this.state.moveLog[i][1]}</td>
+        </tr>
+      )
     }
     return (
       <React.Fragment>
@@ -138,12 +155,29 @@ class CounterWithUID extends Component {
         </button>
 
         {winMenu}
-
-        <Chessboard
-          uid={this.props.uid}
-          whiteId={this.state.whiteId}
-          blackId={this.state.blackId}
-        />
+        <div class="row">
+          <div class="col-sm-8">
+            <Chessboard
+              uid={this.props.uid}
+              whiteId={this.state.whiteId}
+              blackId={this.state.blackId}
+            />
+          </div>
+          <div class="col-sm-2">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"> </th>
+                  <th scope="col">White</th>
+                  <th scope="col">Black</th>
+                </tr>
+              </thead>
+              <tbody>
+                {moveLog}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

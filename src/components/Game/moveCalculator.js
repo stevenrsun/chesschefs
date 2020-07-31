@@ -1,6 +1,6 @@
 import * as checkHelper from "./underCheckHelpers.js";
 
-export function calculatePawnMoves(coords, color, board) {
+export function calculatePawnMoves(coords, color, board, pawnTwoForward) {
   var squares = [];
   var r = coords[0];
   var c = coords[1];
@@ -15,6 +15,12 @@ export function calculatePawnMoves(coords, color, board) {
     // diagonal capture left
     if (board[r + 1][c + 1] !== 0 && board[r + 1][c + 1] <= 6)
       squares.push([r + 1, c + 1]);
+    // en passant right
+    if (r === 4 && pawnTwoForward === (c - 1))
+      squares.push([r + 1, c - 1]);
+    // en passant left
+    if (r === 4 && pawnTwoForward === (c + 1))
+      squares.push([r + 1, c + 1]);
   }
 
   if (color === "white") {
@@ -26,6 +32,12 @@ export function calculatePawnMoves(coords, color, board) {
     if (board[r - 1][c - 1] >= 7) squares.push([r - 1, c - 1]);
     // diagonal capture right
     if (board[r - 1][c + 1] >= 7) squares.push([r - 1, c + 1]);
+    // en passant left
+    if (r === 3 && pawnTwoForward === (c - 1))
+      squares.push([r - 1, c - 1]);
+    // en passant right
+    if (r === 3 && pawnTwoForward === (c + 1))
+      squares.push([r - 1, c + 1]);
   }
 
   return squares;
