@@ -283,7 +283,7 @@ class ChessboardBase extends Component {
       "promotion menu closed, piece selected: " + this.state.promotedPiece
     );
     this.game
-      .ref(
+      .child(
         "board/" +
           this.state.promoCoords[0] +
           "/" +
@@ -299,10 +299,10 @@ class ChessboardBase extends Component {
       // checkmate? if so, show alert and end game
       if(this.isStalemated()){
         // remove right to move pieces from both sides
-        this.game.ref("white_id_old").set(this.props.whiteId);
-        this.game.ref("black_id_old").set(this.props.blackId);
-        this.game.ref("white_id").set(-1);
-        this.game.ref("black_id").set(-1);
+        this.game.child("white_id_old").set(this.props.whiteId);
+        this.game.child("black_id_old").set(this.props.blackId);
+        this.game.child("white_id").set(-1);
+        this.game.child("black_id").set(-1);
         if(moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", this.state.board)) {
           // alert victory
           this.checkmate.set("black");
@@ -318,10 +318,10 @@ class ChessboardBase extends Component {
       // checkmate? if so, show alert and end game
       if(this.isStalemated()){
         // remove right to move pieces from both sides
-        this.game.ref("white_id_old").set(this.props.whiteId);
-        this.game.ref("black_id_old").set(this.props.blackId);
-        this.game.ref("white_id").set(-1);
-        this.game.ref("black_id").set(-1);
+        this.game.child("white_id_old").set(this.props.whiteId);
+        this.game.child("black_id_old").set(this.props.blackId);
+        this.game.child("white_id").set(-1);
+        this.game.child("black_id").set(-1);
         if(moveCalc.isUnderCheck(this.state.blackKingCoords, "black", this.state.board)) {
           // alert victory
           this.checkmate.set("white");
@@ -347,10 +347,10 @@ class ChessboardBase extends Component {
       let enPassant = false;
       console.log("capturedpiece is " + capturedPiece)
       this.game
-        .ref("board/" + coords[0] + "/" + coords[1])
+        .child("board/" + coords[0] + "/" + coords[1])
         .set(this.state.currPiece);
       this.game
-        .ref(
+        .child(
           "board/" +
             this.state.sourceCoords[0] +
             "/" +
@@ -375,7 +375,7 @@ class ChessboardBase extends Component {
           // capture a pawn if en passant was performed
           if(this.state.currPiece === 1 && coords[0] === 2 && this.state.board[coords[0] + 1][coords[1]] === 7 && capturedPiece === 0){
             this.game
-              .ref("board/" + (coords[0] + 1) + "/" + coords[1])
+              .child("board/" + (coords[0] + 1) + "/" + coords[1])
               .set(0);
             enPassant = true;
           }
@@ -392,10 +392,10 @@ class ChessboardBase extends Component {
               // move rook if it was a castle move (can castle = true, moved piece = king)
               if(coords[1] === 6 && this.state.whiteCastleKs){
                 this.game
-                  .ref("board/" + 7 + "/" + 5)
+                  .child("board/" + 7 + "/" + 5)
                   .set(4);
                 this.game
-                  .ref(
+                  .child(
                     "board/" +
                       7 +
                       "/" +
@@ -408,10 +408,10 @@ class ChessboardBase extends Component {
               }
               else if(coords[1] === 2 && this.state.whiteCastleQs){
                 this.game
-                  .ref("board/" + 7 + "/" + 3)
+                  .child("board/" + 7 + "/" + 3)
                   .set(4);
                 this.game
-                  .ref(
+                  .child(
                     "board/" +
                       7 +
                       "/" +
@@ -453,10 +453,10 @@ class ChessboardBase extends Component {
           console.log("white just moved, about to call is stalemate")
           if(this.isStalemated()){
             // remove right to move pieces from both sides
-            this.game.ref("white_id_old").set(this.props.whiteId);
-            this.game.ref("black_id_old").set(this.props.blackId);
-            this.game.ref("white_id").set(-1);
-            this.game.ref("black_id").set(-1);
+            this.game.child("white_id_old").set(this.props.whiteId);
+            this.game.child("black_id_old").set(this.props.blackId);
+            this.game.child("white_id").set(-1);
+            this.game.child("black_id").set(-1);
             if(moveCalc.isUnderCheck(this.state.blackKingCoords, "black", this.state.board)) {
               // alert victory
               this.checkmate.set("white");
@@ -475,7 +475,7 @@ class ChessboardBase extends Component {
           // capture a pawn if en passant was performed
           if(this.state.currPiece === 7 && coords[0] === 5 && this.state.board[coords[0] - 1][coords[1]] === 1 && capturedPiece === 0){
             this.game
-              .ref("board/" + (coords[0] - 1) + "/" + coords[1])
+              .child("board/" + (coords[0] - 1) + "/" + coords[1])
               .set(0);
             enPassant = true;
           }
@@ -493,10 +493,10 @@ class ChessboardBase extends Component {
             if(this.state.blackCastleKs || this.state.blackCastleQs){
               if(coords[1] === 6 && this.state.blackCastleKs){
                 this.game
-                  .ref("board/" + 0 + "/" + 5)
+                  .child("board/" + 0 + "/" + 5)
                   .set(10);
                 this.game
-                  .ref(
+                  .child(
                     "board/" +
                       0 +
                       "/" +
@@ -509,10 +509,10 @@ class ChessboardBase extends Component {
               }
               else if(coords[1] === 2 && this.state.blackCastleQs){
                 this.game
-                  .ref("board/" + 0 + "/" + 3)
+                  .child("board/" + 0 + "/" + 3)
                   .set(10);
                 this.game
-                  .ref(
+                  .child(
                     "board/" +
                       0 +
                       "/" +
@@ -553,10 +553,10 @@ class ChessboardBase extends Component {
           //checkmate? if so, show alert and end game
           if(this.isStalemated()){
             // remove right to move pieces from both sides
-            this.game.ref("white_id_old").set(this.props.whiteId);
-            this.game.ref("black_id_old").set(this.props.blackId);
-            this.game.ref("white_id").set(-1);
-            this.game.ref("black_id").set(-1);
+            this.game.child("white_id_old").set(this.props.whiteId);
+            this.game.child("black_id_old").set(this.props.blackId);
+            this.game.child("white_id").set(-1);
+            this.game.child("black_id").set(-1);
             if(moveCalc.isUnderCheck(this.state.whiteKingCoords, "white", this.state.board)){
               // alert victory
               this.checkmate.set("black");
@@ -807,17 +807,17 @@ class ChessboardBase extends Component {
     this.moveNum.set(0);
     this.moveLog.set([[" ", " "]]);
     this.game
-        .ref("black_id")
+        .child("black_id")
         .set(
           this.state.blackIdOld
         );
     this.game
-        .ref("white_id")
+        .child("white_id")
         .set(
           this.state.whiteIdOld
         );
     this.game
-        .ref("board")
+        .child("board")
         .set([[10, 8, 9, 11, 12, 9, 8, 10],
               [7, 7, 7, 7, 7, 7, 7, 7],
               [0, 0, 0, 0, 0, 0, 0, 0],
