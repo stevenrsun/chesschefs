@@ -5,34 +5,34 @@ import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";
 
-const Counter = ({ authUser }) => (
+const Game = ({ authUser, match }) => (
   <div>
     <AuthUserContext.Consumer>
       {(authUser) =>
         authUser ? (
-          <CounterFinal uid={authUser.uid} />
+          <GameFinal uid={authUser.uid} gameId={match.params.id}/>
         ) : (
-          <CounterFinal uid={0} />
+          <GameFinal uid={0} gameId={match.params.id}/>
         )
       }
     </AuthUserContext.Consumer>
   </div>
 );
 
-class CounterWithUID extends Component {
+class GameWithUID extends Component {
   constructor(props) {
     super(props);
 
     this.database = this.props.firebase.db;
-    this.counterOne = this.database.ref("game_example").child("white_counter");
-    this.counterTwo = this.database.ref("game_example").child("black_counter");
-    this.white = this.database.ref("game_example").child("white_id");
-    this.black = this.database.ref("game_example").child("black_id");
-    this.checkmate = this.database.ref("games/game-ID/checkmate");
-    this.moveLog = this.database.ref("games/game-ID/move_log");
-    this.moveNum = this.database.ref("games/game-ID/move_num");
+    this.game = this.database.ref("games/" + this.props.gameId);
+    this.white = this.game.child("white_id");
+    this.black = this.game.child("black_id");
+    this.checkmate = this.game.child("checkmate");
+    this.moveLog = this.game.child("move_log");
+    this.moveNum = this.game.child("move_num");
 
     this.state = {
+      gameId: 0,
       countOne: 0,
       countTwo: 0,
 
@@ -47,35 +47,32 @@ class CounterWithUID extends Component {
   }
 
   componentDidMount() {
+    this.setState({gameId: this.props.gameId});
     this.checkmate.on("value", (snap) => {
       this.setState({
         checkmate: snap.val(),
-      });
-    });
-    this.counterOne.on("value", (snap) => {
-      this.setState({
-        countOne: snap.val(),
-      });
-    });
-    this.counterTwo.on("value", (snap) => {
-      this.setState({
-        countTwo: snap.val(),
       });
     });
     this.white.on("value", (snapshot) => {
       this.setState({
         whiteId: snapshot.val(),
       });
-      if (snapshot.val() === 0) this.white.set(this.props.uid);
+      if (snapshot.val() === 0){ 
+        this.white.set(this.props.uid);
+      }
     });
     this.black.on("value", (snapshot) => {
+      let whiteId;
+      this.white.once("value", (snap) => {
+        whiteId = snap.val();
+      })
       this.setState({
         blackId: snapshot.val(),
       });
       if (
         snapshot.val() === 0 &&
-        this.state.whiteId !== 0 &&
-        this.state.whiteId !== this.props.uid
+        whiteId !== 0 &&
+        whiteId !== this.props.uid
       )
         this.black.set(this.props.uid);
     });
@@ -87,43 +84,43 @@ class CounterWithUID extends Component {
     });
   }
 
-  incrementCounterOne = () => {
-    if (this.props.uid === this.state.whiteId) {
-      this.counterOne.set(this.state.countOne + 1);
-    }
-  };
-
-  incrementCounterTwo = () => {
-    if (this.props.uid === this.state.blackId) {
-      this.counterTwo.set(this.state.countTwo + 1);
-    }
-  };
-
   render() {
+    let gameExists;
     let winMenu;
-    if (this.state.checkmate !== 0) {
-      if(this.state.checkmate === "draw")
-        winMenu = <h1 class="head">DRAW</h1>
-      else
-        winMenu =
-          this.state.checkmate === "white" ? (
-            <h1 class="head">WHITE VICTORY</h1>
-          ) : (
-            <h1 class="head">BLACK VICTORY</h1>
-          );
-    }
     let moveLog = [];
-    for(let i = 0; i < this.state.moveLog.length; i++){
-      moveLog.push(
-        <tr>
-          <th scope="row">{i + 1}</th>
-          <td>{this.state.moveLog[i][0]}</td>
-          <td>{this.state.moveLog[i][1]}</td>
-        </tr>
-      )
+    this.database.ref("games").once('value', snapshot => {
+      if(snapshot.hasChild(this.state.gameId))
+        gameExists = true;
+      else
+        gameExists = false;
+    })
+    if(gameExists) {
+      if (this.state.checkmate !== 0) {
+        if(this.state.checkmate === "draw")
+          winMenu = <h1 class="head">DRAW</h1>
+        else
+          winMenu =
+            this.state.checkmate === "white" ? (
+              <h1 class="head">WHITE VICTORY</h1>
+            ) : (
+              <h1 class="head">BLACK VICTORY</h1>
+            );
+      }
+      for(let i = 0; i < this.state.moveLog.length; i++){
+        moveLog.push(
+          <tr>
+            <th scope="row">{i + 1}</th>
+            <td>{this.state.moveLog[i][0]}</td>
+            <td>{this.state.moveLog[i][1]}</td>
+          </tr>
+        )
+      }
     }
+    let error = gameExists ? null : <h1>Loading... (if not loaded soon, game does not exist anymore)</h1>;
     return (
       <React.Fragment>
+        {error}
+        {gameExists && <div>
         <h1>{this.props.uid}</h1>
         <h1 style={{ marginTop: 50 }}>
           whiteId: {this.state.whiteId}
@@ -167,6 +164,7 @@ class CounterWithUID extends Component {
               uid={this.props.uid}
               whiteId={this.state.whiteId}
               blackId={this.state.blackId}
+              gameId={this.props.gameId}
             />
           </div>
           <div class="col-sm-2">
@@ -184,11 +182,12 @@ class CounterWithUID extends Component {
             </table>
           </div>
         </div>
+        </div>}
       </React.Fragment>
     );
   }
 }
 
-const CounterFinal = withFirebase(CounterWithUID);
+const GameFinal = withFirebase(GameWithUID);
 
-export default Counter;
+export default Game;
