@@ -862,6 +862,7 @@ class ChessboardBase extends Component {
               onClick={this.handleClick}
               coords={[r, c]}
               indicator={this.state.indicatorMap[r][c]}
+              gameId={this.props.gameId}
             />
           )
         else
@@ -871,6 +872,7 @@ class ChessboardBase extends Component {
               onClick={this.handleClick}
               coords={[r, c]}
               indicator={this.state.indicatorMap[r][c]}
+              gameId={this.props.gameId}
             />
           )
       }

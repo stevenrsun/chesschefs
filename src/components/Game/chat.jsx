@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { withFirebase } from "../FireBase";
 import {Launcher} from 'react-chat-window'
 
-const Chat = ({ uid, whiteId, blackId }) => (
-    <ChatFinal uid={uid} whiteId={whiteId} blackId={blackId} />
+const Chat = ({ uid, gameId }) => (
+    <ChatFinal uid={uid} gameId={gameId} />
 );
 
 class ChatBase extends Component {
@@ -20,7 +20,7 @@ class ChatBase extends Component {
     async componentDidMount() {
         this.setState({ readError: null });
         try {
-          this.database.ref("games/game-ID/chats").on("value", snapshot => {
+          this.database.ref("games/" + this.props.gameId + "/chats").on("value", snapshot => {
             let chats = [];
             console.log(snapshot.key)
             snapshot.forEach((snap) => {
@@ -42,7 +42,7 @@ class ChatBase extends Component {
     async _onMessageWasSent(message) {
         this.setState({ writeError: null });
         try {
-            await this.database.ref("games/game-ID/chats").push({
+            await this.database.ref("games/" + this.props.gameId + "/chats").push({
               author: this.props.uid,
               type: 'text',
               data:{

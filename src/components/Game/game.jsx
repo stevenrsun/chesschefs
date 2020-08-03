@@ -155,6 +155,7 @@ class GameWithUID extends Component {
           uid={this.props.uid}
           whiteId={this.state.whiteId}
           blackId={this.state.blackId}
+          gameId={this.props.gameId}
         />
 
         {winMenu}

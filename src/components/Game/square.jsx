@@ -20,8 +20,8 @@ import green_dot from "../pictures/Indicators/green_dot.png"
 import red_square from "../pictures/Indicators/red_square.jpg";
 import highlight_square from "../pictures/Indicators/highlight_square.png";
 
-const Square = ({isLight, onClick, coords, indicator}) => (
-    isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator}/> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator}/>
+const Square = ({isLight, onClick, coords, indicator, gameId}) => (
+    isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId}/> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId}/>
 )
 
 class LightSquare extends Component {
@@ -29,8 +29,7 @@ class LightSquare extends Component {
         super(props);
 
         this.database = this.props.firebase.db;
-        this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
-        this.indicator = this.database.ref('games/game-ID/move_markers/' + this.props.coords[0] + "/" + this.props.coords[1]);
+        this.node = this.database.ref('games/' + this.props.gameId + '/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
 
         this.state = { 
             piece: 0,
@@ -68,11 +67,6 @@ class LightSquare extends Component {
                 piece: snap.val()
             });
         });
-        this.indicator.on("value", (snap) => {
-            this.setState({
-                indicator: snap.val()
-            });
-        });
     }
 
     render() { 
@@ -108,8 +102,7 @@ class DarkSquare extends Component {
         super(props);
 
         this.database = this.props.firebase.db;
-        this.node = this.database.ref('games/game-ID/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
-        this.indicator = this.database.ref('games/game-ID/move_markers/' + this.props.coords[0] + "/" + this.props.coords[1]);
+        this.node = this.database.ref('games/' + this.props.gameId + '/board/' + this.props.coords[0] + "/" + this.props.coords[1]);
         
         this.state = { 
             piece: 0,
@@ -145,11 +138,6 @@ class DarkSquare extends Component {
         this.node.on("value", (snap) => {
             this.setState({
                 piece: snap.val()
-            });
-        });
-        this.indicator.on("value", (snap) => {
-            this.setState({
-                indicator: snap.val()
             });
         });
     }
