@@ -858,35 +858,69 @@ class ChessboardBase extends Component {
         );
     }
     let board = [];
-    for(let c = 0; c < this.state.board.length; c++){
-      let col = [];
-      for(let r = 0; r < this.state.board.length; r++){
-        if((r + c) % 2 == 0)
-          col.push(
-            <Square
-              isLight={true}
-              onClick={this.handleClick}
-              coords={[r, c]}
-              indicator={this.state.indicatorMap[r][c]}
-              gameId={this.props.gameId}
-            />
-          )
-        else
-          col.push(
-            <Square
-              isLight={false}
-              onClick={this.handleClick}
-              coords={[r, c]}
-              indicator={this.state.indicatorMap[r][c]}
-              gameId={this.props.gameId}
-            />
-          )
+    if(this.props.uid === this.state.whiteId){
+      for(let c = 0; c < this.state.board.length; c++){
+        let col = [];
+        for(let r = 0; r < this.state.board.length; r++){
+          if((r + c) % 2 == 0)
+            col.push(
+              <Square
+                isLight={true}
+                onClick={this.handleClick}
+                coords={[r, c]}
+                indicator={this.state.indicatorMap[r][c]}
+                gameId={this.props.gameId}
+              />
+            )
+          else
+            col.push(
+              <Square
+                isLight={false}
+                onClick={this.handleClick}
+                coords={[r, c]}
+                indicator={this.state.indicatorMap[r][c]}
+                gameId={this.props.gameId}
+              />
+            )
+        }
+        board.push(
+          <div class="col-sm-1" style={this.styles.square}>
+            {col}
+          </div>
+        )
       }
-      board.push(
-        <div class="col-sm-1" style={this.styles.square}>
-          {col}
-        </div>
-      )
+    }
+    else {
+      for(let c = this.state.board.length - 1; c >= 0; c--){
+        let col = [];
+        for(let r = this.state.board.length - 1; r >= 0; r--){
+          if((r + c) % 2 == 0)
+            col.push(
+              <Square
+                isLight={true}
+                onClick={this.handleClick}
+                coords={[r, c]}
+                indicator={this.state.indicatorMap[r][c]}
+                gameId={this.props.gameId}
+              />
+            )
+          else
+            col.push(
+              <Square
+                isLight={false}
+                onClick={this.handleClick}
+                coords={[r, c]}
+                indicator={this.state.indicatorMap[r][c]}
+                gameId={this.props.gameId}
+              />
+            )
+        }
+        board.push(
+          <div class="col-sm-1" style={this.styles.square}>
+            {col}
+          </div>
+        )
+      }
     }
     return (
       <div>
