@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-//import firebase from "firebase";
+import firebase from "firebase";
 import { withFirebase, FirebaseContext } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
@@ -10,13 +10,7 @@ const Game = ({ authUser, match }) => (
     <AuthUserContext.Consumer>
       {(authUser) =>
         authUser ? <GameFinal uid={authUser.uid} gameId={match.params.id}/> :
-        <FirebaseContext.Consumer>
-          {
-            firebase => (
-            <GameFinal uid={firebase.auth.signInAnonymously().uid} gameId={match.params.id}/>
-            )
-          }
-        </FirebaseContext.Consumer>
+        <GameFinal uid={0} gameId={match.params.id}/>
       }
     </AuthUserContext.Consumer>
   </div>
@@ -49,7 +43,10 @@ class GameWithUID extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    if(this.props.uid === 0){
+      await firebase.auth().signInAnonymously();
+    }
     this.checkmate.on("value", (snap) => {
       this.setState({
         checkmate: snap.val(),

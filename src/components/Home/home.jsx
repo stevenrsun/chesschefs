@@ -88,7 +88,7 @@ class HomeBase extends Component {
               </div>
               <div class="modal-body">
                 Game created! Your link is: 
-                <a href={window.location.href + "game/" + this.state.games[0]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
+                <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
