@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 //import firebase from "firebase";
-import { withFirebase } from "../FireBase";
+import { withFirebase, FirebaseContext } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";
@@ -9,11 +9,14 @@ const Game = ({ authUser, match }) => (
   <div>
     <AuthUserContext.Consumer>
       {(authUser) =>
-        authUser ? (
-          <GameFinal uid={authUser.uid} gameId={match.params.id}/>
-        ) : (
-          <GameFinal uid={0} gameId={match.params.id}/>
-        )
+        authUser ? <GameFinal uid={authUser.uid} gameId={match.params.id}/> :
+        <FirebaseContext.Consumer>
+          {
+            firebase => (
+            <GameFinal uid={firebase.auth.signInAnonymously().uid} gameId={match.params.id}/>
+            )
+          }
+        </FirebaseContext.Consumer>
       }
     </AuthUserContext.Consumer>
   </div>
@@ -32,7 +35,7 @@ class GameWithUID extends Component {
     this.moveNum = this.game.child("move_num");
 
     this.state = {
-      gameId: 0,
+      gameId: this.props.gameId,
       countOne: 0,
       countTwo: 0,
 
@@ -47,7 +50,6 @@ class GameWithUID extends Component {
   }
 
   componentDidMount() {
-    this.setState({gameId: this.props.gameId});
     this.checkmate.on("value", (snap) => {
       this.setState({
         checkmate: snap.val(),
@@ -57,7 +59,7 @@ class GameWithUID extends Component {
       this.setState({
         whiteId: snapshot.val(),
       });
-      if (snapshot.val() === 0){ 
+      if (snapshot.val() === 0 && this.props.uid){ 
         this.white.set(this.props.uid);
       }
     });
@@ -73,6 +75,7 @@ class GameWithUID extends Component {
         snapshot.val() === 0 &&
         whiteId !== 0 &&
         whiteId !== this.props.uid
+        && this.props.uid
       )
         this.black.set(this.props.uid);
     });

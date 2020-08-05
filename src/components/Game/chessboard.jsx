@@ -115,24 +115,30 @@ class ChessboardBase extends Component {
     });
     this.promoCoords.on("value", (snap) => {
       var promoCoords = [];
-      var split = snap.val().split(" ");
-      promoCoords.push(parseInt(split[0]));
-      promoCoords.push(parseInt(split[1]));
-      this.setState({ promoCoords: promoCoords });
+      if(snap.val()) {
+        var split = snap.val().split(" ");
+        promoCoords.push(parseInt(split[0]));
+        promoCoords.push(parseInt(split[1]));
+        this.setState({ promoCoords: promoCoords });
+      }
     });
     this.whiteKing.on("value", (snap) => {
       var kingCoords = [];
-      var split = snap.val().split(" ");
-      kingCoords.push(parseInt(split[0]));
-      kingCoords.push(parseInt(split[1]));
-      this.setState({ whiteKingCoords: kingCoords });
+      if(snap.val()) {
+        var split = snap.val().split(" ");
+        kingCoords.push(parseInt(split[0]));
+        kingCoords.push(parseInt(split[1]));
+        this.setState({ whiteKingCoords: kingCoords });
+      }
     });
     this.blackKing.on("value", (snap) => {
       var kingCoords = [];
-      var split = snap.val().split(" ");
-      kingCoords.push(parseInt(split[0]));
-      kingCoords.push(parseInt(split[1]));
-      this.setState({ blackKingCoords: kingCoords });
+      if(snap.val()) {
+        var split = snap.val().split(" ");
+        kingCoords.push(parseInt(split[0]));
+        kingCoords.push(parseInt(split[1]));
+        this.setState({ blackKingCoords: kingCoords });
+      }
     });
     this.checkmate.on("value", (snap) => {
       this.setState({checkmate: snap.val()});
