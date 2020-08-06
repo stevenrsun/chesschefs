@@ -2,13 +2,16 @@ import React, { Component } from "react";
 import chessboard from "../pictures/3DChessboard.gif";
 import { NavLink } from "react-router-dom";
 import { withFirebase } from "../FireBase";
+import spoons from '../pictures/Home Screen/Spoon-Animation.gif'
+import staticspoons from '../pictures/Home Screen/Spoon-Static.png'
+import blank from '../pictures/Home Screen/blank.png'
 
 const Home = () => (
-  <HomeFinal/>
+  <HomeFinal />
 )
 
 class HomeBase extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.database = this.props.firebase.db;
@@ -48,34 +51,32 @@ class HomeBase extends Component {
       white_id: 0,
       white_id_old: 0,
       board: [[10, 8, 9, 11, 12, 9, 8, 10],
-              [7, 7, 7, 7, 7, 7, 7, 7],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [1, 1, 1, 1, 1, 1, 1, 1],
-              [4, 2, 3, 5, 6, 3, 2, 4]],
+      [7, 7, 7, 7, 7, 7, 7, 7],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1],
+      [4, 2, 3, 5, 6, 3, 2, 4]],
       current_move: 0,
       current_piece: 0,
       move_log: [[" ", " "]],
       move_num: 0,
       pawn_two_forward: -1
     });
-    this.setState({gameCreated: true});
+    this.setState({ gameCreated: true });
   }
 
   render() {
     return (
-      <React.Fragment>
-        <a href="https://www.google.com/">
-          <img className="undraggable chessboard" src={chessboard} alt="" />
-        </a>
+      <div className="main_content">
         <h1>{this.state.games}</h1>
-        <NavLink to="/Game"> TEST </NavLink>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onClick={this.createGame.bind(this)}>
-          Create New Game
+        <button type="button" class="spoonsButton undraggable spoons" data-toggle="modal" data-target="#exampleModal">
+          <img src={blank} className="spoons blank" alt="" />
         </button>
+
+
 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -87,7 +88,7 @@ class HomeBase extends Component {
                 </button>
               </div>
               <div class="modal-body">
-                Game created! Your link is: 
+                Game created! Your link is:
                 <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
               </div>
               <div class="modal-footer">
@@ -96,7 +97,7 @@ class HomeBase extends Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

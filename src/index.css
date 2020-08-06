@@ -34,8 +34,7 @@ code {
 }
 
 .navbackground {
-  background-color: black;
-  box-shadow: 0px 40px 50px grey;
+  background-color: #dedede;
 }
 
 .nav {
@@ -112,4 +111,51 @@ button[type="submit"] {
 
 button:hover {
   opacity: 0.8;
+}
+
+.wrapper{
+  display: flex;
+  position: relative;
+}
+
+.wrapper .sidebar{
+  width: 200px;
+  height: 100%;
+  background: #dbdbdb;
+  padding: 30px 0px;
+  position: fixed;
+}
+
+.logo {
+  width: 200px
+}
+
+.main_content {
+  width: 100%;
+  margin-left: 200px;
+}
+
+.spoonsButton {
+  background-color:#ffffff;
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.spoons {
+  position:absolute;
+  background: white;
+  background-image: url("./components/pictures/Home Screen/Spoon-Static.png");
+  background-size: 400px 400px;
+}
+
+.spoons:hover {
+  background-image: url("./components/pictures/Home Screen/SpoonAnimationForever.gif");
+  background-size: 400px 400px;
+}
+
+.blank {
+  width: 400px;
+  height: 400px
 }
