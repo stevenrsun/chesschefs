@@ -19,7 +19,8 @@ class HomeBase extends Component {
 
     this.state = {
       games: [],
-      gameCreated: false
+      gameCreated: false,
+      hover: false
     }
   }
 
@@ -68,12 +69,13 @@ class HomeBase extends Component {
   }
 
   render() {
+    let hover = this.state.hover ? <img src={spoons} className="spoons" alt="" /> : <img src={staticspoons} className="spoons" alt="" />;
     return (
       <div className="main_content">
         <h1>{this.state.games}</h1>
 
-        <button type="button" class="spoonsButton undraggable spoons" data-toggle="modal" data-target="#exampleModal">
-          <img src={blank} className="spoons blank" alt="" />
+        <button type="button" class="spoonsButton undraggable" data-toggle="modal" data-target="#exampleModal" onMouseEnter={() => this.setState({hover: true})} onMouseLeave={() => this.setState({hover: false})}>
+          {hover}
         </button>
 
 

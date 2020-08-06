@@ -146,16 +146,9 @@ button:hover {
 .spoons {
   position:absolute;
   background: white;
-  background-image: url("./components/pictures/Home Screen/Spoon-Static.png");
   background-size: 400px 400px;
 }
 
 .spoons:hover {
-  background-image: url("./components/pictures/Home Screen/SpoonAnimationForever.gif");
   background-size: 400px 400px;
-}
-
-.blank {
-  width: 400px;
-  height: 400px
 }
