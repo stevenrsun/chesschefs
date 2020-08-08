@@ -53,7 +53,6 @@ class GameWithUID extends Component {
     let colorPref;
     await this.colorPref.once("value", (snap) => {
         colorPref = snap.val();
-        console.log("fuck ngs " + colorPref)
     });
     this.checkmate.on("value", (snap) => {
       this.setState({
@@ -65,7 +64,6 @@ class GameWithUID extends Component {
       this.black.once("value", (snap) => {
         blackId = snap.val();
       })
-      console.log(blackId + "fuck ngs")
       this.setState({
         whiteId: snapshot.val(),
       });
@@ -84,7 +82,6 @@ class GameWithUID extends Component {
       }
     });
     this.black.on("value", (snapshot) => {
-      console.log(this.props.uid + "fuck ngs")
       let whiteId;
       this.white.once("value", (snap) => {
         whiteId = snap.val();
@@ -102,7 +99,6 @@ class GameWithUID extends Component {
           this.black.set(this.props.uid);
       }
       else{
-        console.log("entered fuck ngs")
         if (snapshot.val() === 0 && this.props.uid)
           this.black.set(this.props.uid);
       }
@@ -113,7 +109,6 @@ class GameWithUID extends Component {
     this.moveNum.on("value", (snap) => {
       this.setState({ moveNum: snap.val() });
     });
-    console.log(this.state.whiteId + "fuck ngs")
     this.setState({ loaded: true});
   }
 
