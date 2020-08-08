@@ -11,7 +11,7 @@ import { withAuthentication } from "./components/Session";
 import { withFirebase } from "./components/FireBase";
 
 const App = () => (
-  <AppFinal/>
+  <AppFinal />
 )
 
 class AppBase extends React.Component {
@@ -37,17 +37,17 @@ class AppBase extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-          <BrowserRouter>
-          <NavBar/>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/game/:id" component={Game} />
-              <Route path="/login" component={SignInPage} />
-              <Route path="/signup" component={SignUp} />
-            </Switch>
-          </BrowserRouter>
-      </React.Fragment>
+      <div className='global'>
+        <BrowserRouter>
+          <NavBar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/game/:id" component={Game} />
+            <Route path="/login" component={SignInPage} />
+            <Route path="/signup" component={SignUp} />
+          </Switch>
+        </BrowserRouter>
+      </div>
     );
   }
 }

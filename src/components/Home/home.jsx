@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withFirebase } from "../FireBase";
 import spoons from '../pictures/Home Screen/Spoon-Animation.gif'
 import staticspoons from '../pictures/Home Screen/Spoon-Static.png'
+import info from '../pictures/Home Screen/Info.png'
 
 const Home = () => (
   <HomeFinal />
@@ -101,23 +102,24 @@ class HomeBase extends Component {
   }
 
   render() {
-    let hover = this.state.hover ? <img src={spoons} className="spoons" alt="" /> : <img src={staticspoons} className="spoons" alt="" />;
-    let modalBody = this.state.gameCreated ? 
-    <div class="modal-body">
-      Game created! Your link is:
+    let hover = this.state.hover ? <img src={spoons} className="undraggable spoons" alt="" /> : <img src={staticspoons} className="undraggable spoons" alt="" />;
+    let modalBody = this.state.gameCreated ?
+      <div class="modal-body">
+        Game created! Your link is:
       <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
-    </div> :
-    <div class="modal-body">
-      <button type="button" class="btn btn-primary" onClick={this.createGameWhite}>Create Game (White)</button>
-      <button type="button" class="btn btn-primary" onClick={this.createGameBlack}>Create Game (Black)</button>
-    </div>;
+      </div> :
+      <div class="modal-body">
+        <button type="button" class="btn btn-primary" onClick={this.createGameWhite}>Create Game (White)</button>
+        <button type="button" class="btn btn-primary" onClick={this.createGameBlack}>Create Game (Black)</button>
+      </div>;
     return (
       <div className="main_content">
         <h1>{this.state.games}</h1>
 
-        <button type="button" class="spoonsButton undraggable" data-toggle="modal" data-target="#exampleModal" onMouseEnter={() => this.setState({hover: true})} onMouseLeave={() => this.setState({hover: false})}>
+        <button type="button" class="spoonsButton undraggable" data-toggle="modal" data-target="#exampleModal" onMouseEnter={() => this.setState({ hover: true })} onMouseLeave={() => this.setState({ hover: false })}>
           {hover}
         </button>
+        <img src={info} alt="" className="undraggable info" />
 
 
 
@@ -132,7 +134,7 @@ class HomeBase extends Component {
               </div>
               {modalBody}
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={() => this.setState({gameCreated: false})}>I want a new link (Cancel)</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={() => this.setState({ gameCreated: false })}>I want a new link (Cancel)</button>
               </div>
             </div>
           </div>

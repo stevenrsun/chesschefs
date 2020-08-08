@@ -71,6 +71,11 @@ code {
   src: local("Eras"), url(./fonts/ITCErasStd-Light.otf);
 }
 
+@font-face {
+  font-family: "Typo Round";
+  src: local("Typo Round"), url(./fonts/Typo_Round_Regular_Demo.otf);
+}
+
 .testForm {
   border: 3px solid #f1f1f1;
   width: 50%;
@@ -121,34 +126,45 @@ button:hover {
 .wrapper .sidebar{
   width: 200px;
   height: 100%;
-  background: #dbdbdb;
+  background: #eeeeee;
   padding: 30px 0px;
   position: fixed;
 }
 
 .logo {
-  width: 200px
+  width: 11vw
 }
 
 .main_content {
   width: 100%;
-  margin-left: 200px;
+  margin-left: 12vw;
 }
 
 .spoonsButton {
   background-color:#ffffff;
   padding: 0;
-  border: none;
+  border: none; 
   background: none;
   outline: none;
 }
 
 .spoons {
-  position:absolute;
   background: white;
-  background-size: 400px 400px;
+  width: 400px;
+  margin-left: 30vw;
 }
 
-.spoons:hover {
-  background-size: 400px 400px;
+.textUnderLogo {
+  font-family: "Typo Round";
+  font-size: 25px;
+  text-align: center
+}
+
+.global {
+  overflow-x: hidden;
+}
+
+.info {
+  padding-top: 3vw;
+  margin-left: 4.5vw;
 }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "firebase";
-import { withFirebase} from "../FireBase";
+import { withFirebase } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";
@@ -9,8 +9,8 @@ const Game = ({ authUser, match }) => (
   <div>
     <AuthUserContext.Consumer>
       {(authUser) =>
-        authUser ? <GameFinal uid={authUser.uid} gameId={match.params.id}/> :
-        <GameFinal uid={0} gameId={match.params.id}/>
+        authUser ? <GameFinal uid={authUser.uid} gameId={match.params.id} /> :
+          <GameFinal uid={0} gameId={match.params.id} />
       }
     </AuthUserContext.Consumer>
   </div>
@@ -47,12 +47,12 @@ class GameWithUID extends Component {
   }
 
   async componentDidMount() {
-    if(this.props.uid === 0){
+    if (this.props.uid === 0) {
       await firebase.auth().signInAnonymously();
     }
     let colorPref;
     await this.colorPref.once("value", (snap) => {
-        colorPref = snap.val();
+      colorPref = snap.val();
     });
     this.checkmate.on("value", (snap) => {
       this.setState({
@@ -67,7 +67,7 @@ class GameWithUID extends Component {
       this.setState({
         whiteId: snapshot.val(),
       });
-      if(colorPref === "white"){
+      if (colorPref === "white") {
         if (snapshot.val() === 0 && this.props.uid)
           this.white.set(this.props.uid);
       }
@@ -89,7 +89,7 @@ class GameWithUID extends Component {
       this.setState({
         blackId: snapshot.val(),
       });
-      if(colorPref === "white"){
+      if (colorPref === "white") {
         if (
           snapshot.val() === 0 &&
           whiteId !== 0 &&
@@ -98,7 +98,7 @@ class GameWithUID extends Component {
         )
           this.black.set(this.props.uid);
       }
-      else{
+      else {
         if (snapshot.val() === 0 && this.props.uid)
           this.black.set(this.props.uid);
       }
@@ -109,7 +109,7 @@ class GameWithUID extends Component {
     this.moveNum.on("value", (snap) => {
       this.setState({ moveNum: snap.val() });
     });
-    this.setState({ loaded: true});
+    this.setState({ loaded: true });
   }
 
   render() {
@@ -117,24 +117,24 @@ class GameWithUID extends Component {
     let winMenu;
     let moveLog = [];
     this.database.ref("games").once('value', snapshot => {
-      if(snapshot.hasChild(this.state.gameId))
+      if (snapshot.hasChild(this.state.gameId))
         gameExists = true;
       else
         gameExists = false;
     })
-    if(gameExists) {
+    if (gameExists) {
       if (this.state.checkmate !== 0) {
-        if(this.state.checkmate === "draw")
+        if (this.state.checkmate === "draw")
           winMenu = <h1 class="head">DRAW</h1>
         else
           winMenu =
             this.state.checkmate === "white" ? (
               <h1 class="head">WHITE VICTORY</h1>
             ) : (
-              <h1 class="head">BLACK VICTORY</h1>
-            );
+                <h1 class="head">BLACK VICTORY</h1>
+              );
       }
-      for(let i = 0; i < this.state.moveLog.length; i++){
+      for (let i = 0; i < this.state.moveLog.length; i++) {
         moveLog.push(
           <tr>
             <th scope="row">{i + 1}</th>
@@ -146,73 +146,73 @@ class GameWithUID extends Component {
     }
     let error = gameExists ? null : <h1>Loading... (if not loaded soon, game does not exist anymore)</h1>;
     return (
-      <React.Fragment>
+      <div className='main_content'>
         {error}
         {gameExists && this.state.loaded && <div>
-        <h1>{this.props.uid}</h1>
-        <h1 style={{ marginTop: 50 }}>
-          whiteId: {this.state.whiteId}
-          <br />
+          <h1>{this.props.uid}</h1>
+          <h1 style={{ marginTop: 50 }}>
+            whiteId: {this.state.whiteId}
+            <br />
           your UID: {this.props.uid}
-          <br />
+            <br />
           counterOne has been incremented: {this.state.countOne} times
         </h1>
-        <h1 style={{ marginTop: 50 }}>
-          blackId: {this.state.blackId}
-          <br />
+          <h1 style={{ marginTop: 50 }}>
+            blackId: {this.state.blackId}
+            <br />
           your UID: {this.props.uid}
-          <br />
+            <br />
           counterTwo has been incremented: {this.state.countTwo} times
         </h1>
-        <button
-          type="button"
-          onClick={this.incrementCounterOne}
-          class="btn btn-primary"
-        >
-          Increment Button One
+          <button
+            type="button"
+            onClick={this.incrementCounterOne}
+            class="btn btn-primary"
+          >
+            Increment Button One
         </button>
 
-        <button
-          type="button"
-          onClick={this.incrementCounterTwo}
-          class="btn btn-primary"
-        >
-          Increment Button Two
+          <button
+            type="button"
+            onClick={this.incrementCounterTwo}
+            class="btn btn-primary"
+          >
+            Increment Button Two
         </button>
-        <Chat 
-          uid={this.props.uid}
-          whiteId={this.state.whiteId}
-          blackId={this.state.blackId}
-          gameId={this.props.gameId}
-        />
+          <Chat
+            uid={this.props.uid}
+            whiteId={this.state.whiteId}
+            blackId={this.state.blackId}
+            gameId={this.props.gameId}
+          />
 
-        {winMenu}
-        <div class="row">
-          <div class="col-sm-8">
-            <Chessboard
-              uid={this.props.uid}
-              whiteId={this.state.whiteId}
-              blackId={this.state.blackId}
-              gameId={this.props.gameId}
-            />
+          {winMenu}
+          <div class="row">
+            <div class="col-sm-8">
+              <Chessboard
+                uid={this.props.uid}
+                whiteId={this.state.whiteId}
+                blackId={this.state.blackId}
+                gameId={this.props.gameId}
+              />
+            </div>
+            <div class="col-sm-2">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"> </th>
+                    <th scope="col">White</th>
+                    <th scope="col">Black</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {moveLog}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="col-sm-2">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col"> </th>
-                  <th scope="col">White</th>
-                  <th scope="col">Black</th>
-                </tr>
-              </thead>
-              <tbody>
-                {moveLog}
-              </tbody>
-            </table>
-          </div>
-        </div>
         </div>}
-      </React.Fragment>
+      </div>
     );
   }
 }

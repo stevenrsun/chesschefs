@@ -11,6 +11,7 @@ class NavBar extends Component {
                     <Link to="/">
                         <img className="undraggable logo" src={logo} alt="" />
                     </Link>
+                    <div className="textUnderLogo">Chess Chefs</div>
                     <div class="misc"></div>
                 </div>
             </div>
