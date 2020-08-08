@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import SignOutButton from '../Authentication/signOut';
-import { AuthUserContext } from '../Session';
 import logo from '../pictures/Logo.png'
 
 class NavBar extends Component {

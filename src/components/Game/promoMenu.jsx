@@ -26,31 +26,31 @@ class PromoMenu extends Component {
         if(this.props.color === "white")
             images = <div class="col-sm-1">
                         <a href="#" onClick = {(e) => this.props.onClick(2, e)}>
-                            <img src={this.state.whitePieces[0]} style={this.styles.piece}/>
+                            <img src={this.state.whitePieces[0]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(3, e)}>
-                            <img src={this.state.whitePieces[1]} style={this.styles.piece}/>
+                            <img src={this.state.whitePieces[1]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(4, e)}>
-                            <img src={this.state.whitePieces[2]} style={this.styles.piece}/>
+                            <img src={this.state.whitePieces[2]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(5, e)}>
-                            <img src={this.state.whitePieces[3]} style={this.styles.piece}/>
+                            <img src={this.state.whitePieces[3]} style={this.styles.piece} alt=""/>
                         </a>
                      </div>
         else
             images = <div class="col-sm-1">
-                            <a href="#" onClick = {(e) => this.props.onClick(8, e)}>
-                            <img src={this.state.blackPieces[0]} style={this.styles.piece}/>
+                        <a href="#" onClick = {(e) => this.props.onClick(8, e)}>
+                            <img src={this.state.blackPieces[0]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(9, e)}>
-                            <img src={this.state.blackPieces[1]} style={this.styles.piece}/>
+                            <img src={this.state.blackPieces[1]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(10, e)}>
-                            <img src={this.state.blackPieces[2]} style={this.styles.piece}/>
+                            <img src={this.state.blackPieces[2]} style={this.styles.piece} alt=""/>
                         </a>
                         <a href="#" onClick = {(e) => this.props.onClick(11, e)}>
-                            <img src={this.state.blackPieces[3]} style={this.styles.piece}/>
+                            <img src={this.state.blackPieces[3]} style={this.styles.piece} alt=""/>
                         </a>
                     </div>
         return ( 

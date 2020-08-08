@@ -25,7 +25,7 @@ class ChatBase extends Component {
             console.log(snapshot.key)
             snapshot.forEach((snap) => {
                 let message = snap.val();
-                if(message.author == this.props.uid)
+                if(message.author === this.props.uid)
                     message.author = "me"
                 else
                     message.author = "them"

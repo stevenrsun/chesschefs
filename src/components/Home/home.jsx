@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import chessboard from "../pictures/3DChessboard.gif";
-import { NavLink } from "react-router-dom";
 import { withFirebase } from "../FireBase";
 import spoons from '../pictures/Home Screen/Spoon-Animation.gif'
 import staticspoons from '../pictures/Home Screen/Spoon-Static.png'
-import blank from '../pictures/Home Screen/blank.png'
 
 const Home = () => (
   <HomeFinal />

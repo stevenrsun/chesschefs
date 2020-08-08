@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "firebase";
-import { withFirebase, FirebaseContext } from "../FireBase";
+import { withFirebase} from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";

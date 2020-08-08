@@ -207,7 +207,7 @@ export function findAttackingCrosses(coords, color, board) {
   if (
     c >= 0 &&
     ((color === "white" && board[r][c] === 12) ||
-      (color === "black" && board[r][c] == 6))
+      (color === "black" && board[r][c] === 6))
   ) {
     console.log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + color + " " + board[0][4] + " " + coords[0] + "," + coords[1] + " r,c is " + r + "," + c)
     return [r, c];
@@ -243,7 +243,7 @@ export function findAttackingCrosses(coords, color, board) {
   if (
     c <= 7 &&
     ((color === "white" && board[r][c] === 12) ||
-      (color === "black" && board[r][c] == 6))
+      (color === "black" && board[r][c] === 6))
   ) {
     return [r, c];
   }
@@ -278,7 +278,7 @@ export function findAttackingCrosses(coords, color, board) {
   if (
     r >= 0 &&
     ((color === "white" && board[r][c] === 12) ||
-      (color === "black" && board[r][c] == 6))
+      (color === "black" && board[r][c] === 6))
   ) {
     return [r, c];
   }
@@ -313,7 +313,7 @@ export function findAttackingCrosses(coords, color, board) {
   if (
     r <= 7 &&
     ((color === "white" && board[r][c] === 12) ||
-      (color === "black" && board[r][c] == 6))
+      (color === "black" && board[r][c] === 6))
   ) {
     return [r, c];
   }

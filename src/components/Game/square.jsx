@@ -75,7 +75,7 @@ class LightSquare extends Component {
             square = 
             <View style={this.styles.container}>
                 <ImageBackground source={light_square} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt=""/>
                 </ImageBackground>
             </View>
         }
@@ -84,7 +84,7 @@ class LightSquare extends Component {
             <View style={this.styles.container}>
                 <ImageBackground source={light_square} style={this.styles.image}>
                     <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}/>
+                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator} alt=""/>
                     </ImageBackground>
                 </ImageBackground>
             </View>
@@ -148,7 +148,7 @@ class DarkSquare extends Component {
             square = 
             <View style={this.styles.container}>
                 <ImageBackground source={dark_square} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece}/>
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt=""/>
                 </ImageBackground>
             </View>
         }
@@ -157,7 +157,7 @@ class DarkSquare extends Component {
             <View style={this.styles.container}>
                 <ImageBackground source={dark_square} style={this.styles.image}>
                     <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}/>
+                        <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator} alt=""/>
                     </ImageBackground>
                 </ImageBackground>
             </View>
