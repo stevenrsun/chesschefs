@@ -22,6 +22,7 @@ class GameWithUID extends Component {
 
     this.database = this.props.firebase.db;
     this.game = this.database.ref("games/" + this.props.gameId);
+    this.colorPref = this.game.child("color_pref");
     this.white = this.game.child("white_id");
     this.black = this.game.child("black_id");
     this.checkmate = this.game.child("checkmate");
@@ -33,13 +34,15 @@ class GameWithUID extends Component {
       countOne: 0,
       countTwo: 0,
 
+      colorPref: "",
       whiteId: "",
       blackId: "",
 
       checkmate: 0,
 
       moveLog: [],
-      moveNum: 0
+      moveNum: 0,
+      loaded: false
     };
   }
 
@@ -47,20 +50,41 @@ class GameWithUID extends Component {
     if(this.props.uid === 0){
       await firebase.auth().signInAnonymously();
     }
+    let colorPref;
+    await this.colorPref.once("value", (snap) => {
+        colorPref = snap.val();
+        console.log("fuck ngs " + colorPref)
+    });
     this.checkmate.on("value", (snap) => {
       this.setState({
         checkmate: snap.val(),
       });
     });
     this.white.on("value", (snapshot) => {
+      let blackId;
+      this.black.once("value", (snap) => {
+        blackId = snap.val();
+      })
+      console.log(blackId + "fuck ngs")
       this.setState({
         whiteId: snapshot.val(),
       });
-      if (snapshot.val() === 0 && this.props.uid){ 
-        this.white.set(this.props.uid);
+      if(colorPref === "white"){
+        if (snapshot.val() === 0 && this.props.uid)
+          this.white.set(this.props.uid);
+      }
+      else {
+        if (
+          snapshot.val() === 0 &&
+          blackId !== 0 &&
+          blackId !== this.props.uid
+          && this.props.uid
+        )
+          this.white.set(this.props.uid);
       }
     });
     this.black.on("value", (snapshot) => {
+      console.log(this.props.uid + "fuck ngs")
       let whiteId;
       this.white.once("value", (snap) => {
         whiteId = snap.val();
@@ -68,13 +92,20 @@ class GameWithUID extends Component {
       this.setState({
         blackId: snapshot.val(),
       });
-      if (
-        snapshot.val() === 0 &&
-        whiteId !== 0 &&
-        whiteId !== this.props.uid
-        && this.props.uid
-      )
-        this.black.set(this.props.uid);
+      if(colorPref === "white"){
+        if (
+          snapshot.val() === 0 &&
+          whiteId !== 0 &&
+          whiteId !== this.props.uid
+          && this.props.uid
+        )
+          this.black.set(this.props.uid);
+      }
+      else{
+        console.log("entered fuck ngs")
+        if (snapshot.val() === 0 && this.props.uid)
+          this.black.set(this.props.uid);
+      }
     });
     this.moveLog.on("value", (snap) => {
       this.setState({ moveLog: snap.val() });
@@ -82,6 +113,8 @@ class GameWithUID extends Component {
     this.moveNum.on("value", (snap) => {
       this.setState({ moveNum: snap.val() });
     });
+    console.log(this.state.whiteId + "fuck ngs")
+    this.setState({ loaded: true});
   }
 
   render() {
@@ -120,7 +153,7 @@ class GameWithUID extends Component {
     return (
       <React.Fragment>
         {error}
-        {gameExists && <div>
+        {gameExists && this.state.loaded && <div>
         <h1>{this.props.uid}</h1>
         <h1 style={{ marginTop: 50 }}>
           whiteId: {this.state.whiteId}

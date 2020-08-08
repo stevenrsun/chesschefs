@@ -94,6 +94,7 @@ class ChessboardBase extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props.uid + " fuck ngs " + this.props.whiteId + " " + this.props.blackId)
     document.addEventListener("mousedown", this.handleClickOutside);
     this.board.on("value", (snap) => {
       this.setState({ board: snap.val() });
