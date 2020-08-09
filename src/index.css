@@ -124,7 +124,7 @@ button:hover {
 }
 
 .wrapper .sidebar{
-  width: 200px;
+  width: 11vw;
   height: 100%;
   background: #eeeeee;
   padding: 30px 0px;
@@ -142,16 +142,15 @@ button:hover {
 
 .spoonsButton {
   background-color:#ffffff;
-  padding: 0;
-  border: none; 
   background: none;
-  outline: none;
+  width: 400px;
+  margin-left: 30vw;
+  border: none; 
 }
 
 .spoons {
   background: white;
   width: 400px;
-  margin-left: 30vw;
 }
 
 .textUnderLogo {
@@ -165,6 +164,6 @@ button:hover {
 }
 
 .info {
-  padding-top: 3vw;
+  padding-top: 6vw;
   margin-left: 4.5vw;
 }
