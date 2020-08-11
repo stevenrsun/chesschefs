@@ -4,6 +4,8 @@ import { withFirebase } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";
+import { ImageBackground, View } from "react-native";
+import endgameBackground from "../pictures/endgame/EndgameNotification.png"
 
 const Game = ({ authUser, match }) => (
   <div>
@@ -125,13 +127,13 @@ class GameWithUID extends Component {
     if (gameExists) {
       if (this.state.checkmate !== 0) {
         if (this.state.checkmate === "draw")
-          winMenu = <h1 class="head">DRAW</h1>
+          winMenu = <h1>Draw</h1>
         else
           winMenu =
             this.state.checkmate === "white" ? (
-              <h1 class="head">WHITE VICTORY</h1>
+              <h1 class="kalyant-bold endgameText">White Wins!</h1>
             ) : (
-                <h1 class="head">BLACK VICTORY</h1>
+                <h1 class="kalyant-bold endgameText">Black Wins!</h1>
               );
       }
       for (let i = 0; i < this.state.moveLog.length; i++) {
@@ -149,53 +151,13 @@ class GameWithUID extends Component {
       <div className='main_content'>
         {error}
         {gameExists && this.state.loaded && <div>
-          <h1>{this.props.uid}</h1>
-          <h1 style={{ marginTop: 50 }}>
-            whiteId: {this.state.whiteId}
-            <br />
-          your UID: {this.props.uid}
-            <br />
-          counterOne has been incremented: {this.state.countOne} times
-        </h1>
-          <h1 style={{ marginTop: 50 }}>
-            blackId: {this.state.blackId}
-            <br />
-          your UID: {this.props.uid}
-            <br />
-          counterTwo has been incremented: {this.state.countTwo} times
-        </h1>
-          <button
-            type="button"
-            onClick={this.incrementCounterOne}
-            class="btn btn-primary"
-          >
-            Increment Button One
-        </button>
-
-          <button
-            type="button"
-            onClick={this.incrementCounterTwo}
-            class="btn btn-primary"
-          >
-            Increment Button Two
-        </button>
           <Chat
             uid={this.props.uid}
             whiteId={this.state.whiteId}
             blackId={this.state.blackId}
             gameId={this.props.gameId}
           />
-
-          {winMenu}
-          <div class="row">
-            <div class="col-sm-8">
-              <Chessboard
-                uid={this.props.uid}
-                whiteId={this.state.whiteId}
-                blackId={this.state.blackId}
-                gameId={this.props.gameId}
-              />
-            </div>
+          <div class="row centered">
             <div class="col-sm-2">
               <table class="table">
                 <thead>
@@ -210,7 +172,20 @@ class GameWithUID extends Component {
                 </tbody>
               </table>
             </div>
+            <div class="col-sm-8">
+              <Chessboard
+                uid={this.props.uid}
+                whiteId={this.state.whiteId}
+                blackId={this.state.blackId}
+                gameId={this.props.gameId}
+              />
+            </div>
           </div>
+          <View class="endgameMenu">
+            <ImageBackground style={{ width: '100%', height: '100%', flex: 1 }} resizeMode='cover' source={endgameBackground}>
+              {winMenu}
+            </ImageBackground>
+          </View>
         </div>}
       </div>
     );
