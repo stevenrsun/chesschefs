@@ -201,18 +201,22 @@ class GameWithUID extends Component {
 
   onResign = () => {
     if (this.props.uid === this.state.whiteId) {
-      this.checkmate.set("black");
-      this.game.child("black_id_old").set(this.state.blackId);
-      this.game.child("white_id_old").set(this.state.whiteId);
-      this.white.set(-1);
-      this.black.set(-1);
+      if(this.state.checkmate === 0 && this.state.whiteId !== -1){
+        this.checkmate.set("black");
+        this.game.child("black_id_old").set(this.state.blackId);
+        this.game.child("white_id_old").set(this.state.whiteId);
+        this.white.set(-1);
+        this.black.set(-1);
+      }
     }
     else {
-      this.checkmate.set("white");
-      this.game.child("black_id_old").set(this.state.blackId);
-      this.game.child("white_id_old").set(this.state.whiteId);
-      this.white.set(-1);
-      this.black.set(-1);
+      if(this.state.checkmate === 0 && this.state.whiteId !== -1){
+        this.checkmate.set("white");
+        this.game.child("black_id_old").set(this.state.blackId);
+        this.game.child("white_id_old").set(this.state.whiteId);
+        this.white.set(-1);
+        this.black.set(-1);
+      }
     }
   }
 
