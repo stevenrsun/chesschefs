@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withFirebase } from "../FireBase";
+import firebase from "firebase";
+import { AuthUserContext } from "../Session";
 import spoons from '../pictures/Home Screen/Spoon-Animation.gif'
 import staticspoons from '../pictures/Home Screen/Spoon-Static.png'
 import info from '../pictures/Home Screen/Info.png'
@@ -7,7 +9,13 @@ import startWhite from '../pictures/Modal/StartAsWhite.png'
 import startBlack from '../pictures/Modal/StartAsBlack.png'
 
 const Home = () => (
-  <HomeFinal />
+  <div>
+        <AuthUserContext.Consumer>
+            {(authUser) =>
+                authUser ? <HomeFinal uid={authUser.uid} /> : <HomeFinal uid={0} />
+            }
+        </AuthUserContext.Consumer>
+    </div>
 )
 
 class HomeBase extends Component {
@@ -24,7 +32,10 @@ class HomeBase extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    if (this.props.uid === 0) {
+      await firebase.auth().signInAnonymously();
+    }
     this.games.on("value", snapshot => {
       let games = [];
       snapshot.forEach((snap) => {

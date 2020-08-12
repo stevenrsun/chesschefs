@@ -820,6 +820,7 @@ class ChessboardBase extends Component {
                 coords={[r, c]}
                 indicator={this.state.indicatorMap[r][c]}
                 gameId={this.props.gameId}
+                uid={this.props.uid}
               />
             )
           else
@@ -830,6 +831,7 @@ class ChessboardBase extends Component {
                 coords={[r, c]}
                 indicator={this.state.indicatorMap[r][c]}
                 gameId={this.props.gameId}
+                uid={this.props.uid}
               />
             )
         }
@@ -852,6 +854,7 @@ class ChessboardBase extends Component {
                 coords={[r, c]}
                 indicator={this.state.indicatorMap[r][c]}
                 gameId={this.props.gameId}
+                uid={this.props.uid}
               />
             )
           else
@@ -862,6 +865,7 @@ class ChessboardBase extends Component {
                 coords={[r, c]}
                 indicator={this.state.indicatorMap[r][c]}
                 gameId={this.props.gameId}
+                uid={this.props.uid}
               />
             )
         }
