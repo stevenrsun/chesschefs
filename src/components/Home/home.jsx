@@ -64,7 +64,9 @@ class HomeBase extends Component {
       current_piece: 0,
       move_log: [[" ", " "]],
       move_num: 0,
-      pawn_two_forward: -1
+      pawn_two_forward: -1,
+      black_draw: 0,
+      white_draw: 0
     });
     this.setState({ gameCreated: true });
   }
@@ -115,7 +117,7 @@ class HomeBase extends Component {
           <button type="button" className="startButton" onClick={this.createGameWhite}><img className="undraggable logo" src={startWhite} alt="" /></button>
           <button type="button" className="startButton" onClick={this.createGameBlack}><img className="undraggable logo" src={startBlack} alt="" /></button>
         </div>
-      </div>;
+      </div >;
     return (
       <div className="main_content">
         <button type="button" class="spoonsButton undraggable" data-toggle="modal" data-target="#exampleModal" onMouseEnter={() => this.setState({ hover: true })} onMouseLeave={() => this.setState({ hover: false })}>

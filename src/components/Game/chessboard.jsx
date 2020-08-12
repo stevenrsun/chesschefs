@@ -4,8 +4,8 @@ import { withFirebase } from "../FireBase";
 import * as moveCalc from "./moveCalculator.js";
 import PromoMenu from "./promoMenu.jsx";
 
-const Chessboard = ({ uid, whiteId, blackId, gameId }) => (
-  <ChessboardFinal uid={uid} whiteId={whiteId} blackId={blackId} gameId={gameId} />
+const Chessboard = ({ uid, whiteId, blackId, gameId, indicatorMap }) => (
+  <ChessboardFinal uid={uid} whiteId={whiteId} blackId={blackId} gameId={gameId} indicatorMap={indicatorMap} />
 );
 
 class ChessboardBase extends Component {
@@ -49,14 +49,7 @@ class ChessboardBase extends Component {
         "Q",
         "K",
       ],
-      indicatorMap: [[0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0]],
+      indicatorMap: this.props.indicatorMap,
       letterMap: ["a", "b", "c", "d", "e", "f", "g", "h"],
       rowMap: ["8", "7", "6", "5", "4", "3", "2", "1"],
       board: [],
@@ -754,6 +747,8 @@ class ChessboardBase extends Component {
   }
 
   resetBoard = () => {
+    this.game.child("white_draw").set(0);
+    this.game.child("black_draw").set(0);
     this.checkmate.set(0);
     this.whiteKing.set("7 4");
     this.blackKing.set("0 4");
@@ -879,14 +874,7 @@ class ChessboardBase extends Component {
     }
     return (
       <div>
-        <div class="container ml-4">
-          <button
-            type="button"
-            onClick={this.resetBoard}
-            class="btn btn-primary"
-          >
-            Reset Board
-          </button>
+        <div class="container">
           <div class="row" ref={this.setWrapperRef}>
             {board}
             {promoMenu}
