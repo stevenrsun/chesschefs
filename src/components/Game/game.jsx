@@ -145,19 +145,27 @@ class GameWithUID extends Component {
     this.setState({ loaded: true });
   }
 
-  guiDisplay() {
-    console.log("gui display called") //doesnt get called rn
-    if (this.state.currentMover === "white") {
-      console.log("whites turn")
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>White's turn</h1>
-    } else if (this.state.currentMove === "black") {
-      console.log("blacks turn")
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Blacks's turn</h1>
-    } else {
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>ERROR</h1>
+  guiDisplay = () => {
+    if(this.state.checkmate === "white"){
+      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>White wins!</h1>
+    }
+    else if(this.state.checkmate === "black"){
+      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Black wins!</h1>
+    }
+    else if(this.state.checkmate === "draw"){
+      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Draw!</h1>
     }
 
-    //supposed to display whoever wins as well, but we need to get the above to work first.
+    else {
+      if (this.state.currentMover === "white") {
+        return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>White's turn</h1>
+      } 
+      else if (this.state.currentMover === "black") {
+        return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Blacks's turn</h1>
+      } 
+    }
+
+    
   }
 
   onDraw = () => {
@@ -316,7 +324,7 @@ class GameWithUID extends Component {
               <table style={{ width: '100%' }} >
                 <thead>
                   <tr>
-                    <th scope="col" class="kalyant-bold" style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>{this.guiDisplay} PLACEHOLDER TURN</th>
+                    <th scope="col" class="kalyant-bold" style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>{this.guiDisplay()} PLACEHOLDER TURN</th>
                   </tr>
                 </thead>
                 <tbody>
