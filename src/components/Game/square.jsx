@@ -18,8 +18,8 @@ import black_rook from "../pictures/Pieces/BRook.png";
 import black_queen from "../pictures/Pieces/BQueen.png";
 import black_king from "../pictures/Pieces/BKing.png";
 import green_dot from "../pictures/Indicators/green_dot.png"
-import red_square from "../pictures/Indicators/red_square.jpg";
-import highlight_square from "../pictures/Indicators/highlight_square.png";
+import red_square from "../pictures/Indicators/red_square.png";
+import highlight_square from "../pictures/Indicators/highlight_square.gif";
 import transparent_square from "../pictures/transparent.png";
 
 const Square = ({ isLight, onClick, coords, indicator, gameId, uid }) => (
@@ -62,7 +62,7 @@ class LightSquare extends Component {
         indicator: {
             height: '5vw',
             width: '5vw',
-            opacity: 0.5
+            opacity: 1
         }
     }
 
@@ -98,8 +98,8 @@ class LightSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}>
-                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
+                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicato}>
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>
@@ -148,7 +148,7 @@ class DarkSquare extends Component {
         indicator: {
             height: '5vw',
             width: '5vw',
-            opacity: 0.5
+            opacity: 1
         }
     }
 
@@ -184,8 +184,8 @@ class DarkSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}>
-                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
+                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.piece}>
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>

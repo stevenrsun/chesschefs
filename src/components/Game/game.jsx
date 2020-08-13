@@ -336,11 +336,11 @@ class GameWithUID extends Component {
                       </tbody>
                     </table>
                   </tr>
-                  <tr style={{ lineHeight: 3 }}>
+                  <tr style={{ lineHeight: 3, fontSize: 20 }}>
                     <td className="buttonRow">
-                      <button class="guibuttons kalyant" onClick={this.onResign}><img src={resign} className="undraggable" alt="" style={{ height: 30, width: 30, marginLeft: "0.2vw" }} /> Resign </button>
+                      <button class="guibuttons kalyant" onClick={this.onResign}><img src={resign} className="undraggable" alt="" style={{ height: 30, width: 30, marginLeft: "0.2vw", fontSize: 20 }} /> Resign </button>
                       <button class="guibuttons" onClick={this.onDraw}>{drawButton}</button>
-                      {this.state.checkmate !== 0 && <button class="guibuttons kalyant" onClick={this.resetBoard} style={{ marginLeft: "2vw", fontSize: 20 }}>Rematch</button>}
+                      {this.state.checkmate !== 0 && <button class="guibuttons kalyant" onClick={this.resetBoard} style={{ marginLeft: "2vw" }}>Rematch</button>}
                     </td>
                   </tr>
                 </tbody>
