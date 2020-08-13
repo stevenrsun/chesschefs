@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import logo from '../pictures/Logo.png'
+import settings from '../pictures/NavBar/Settings.png'
 
 class NavBar extends Component {
     state = {};
@@ -13,7 +14,7 @@ class NavBar extends Component {
                     </Link>
                     <div class="misc">
                         <Link to="/settings">
-                            Settings
+                            <img className="undraggable settings" src={settings} alt="" />
                         </Link>
                     </div>
                 </div>

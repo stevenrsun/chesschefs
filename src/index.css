@@ -219,4 +219,37 @@ table {
   color: black;
 }
 
+.guibuttons {
+  background-color:#ffffff;
+  background: none;
+  border: none; 
+  transition: transform 0.2s;
+}
 
+.guibuttons:hover {
+  transform: scale(1.1);
+}
+
+.gui {
+  padding-top: 7vh;
+}
+
+.chessboard {
+  padding-top: 5vh;
+  margin-left: 10vw;
+}
+
+.chat {
+  margin-top: 100;
+}
+
+.settings {
+  margin-top: 55vh;
+  margin-left: 1vw;
+  width: 9vw;
+  transition: transform 0.2s;
+}
+
+.settings:hover {
+  transform: scale(1.2);
+}

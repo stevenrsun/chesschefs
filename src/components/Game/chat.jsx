@@ -62,7 +62,7 @@ class ChatBase extends Component {
                     }}
                     onMessageWasSent={this._onMessageWasSent.bind(this)}
                     messageList={this.state.chats}
-                    showEmoji
+                    showEmoji={false}
                 />
             </div>
         );

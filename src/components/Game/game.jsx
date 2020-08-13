@@ -4,6 +4,9 @@ import { withFirebase } from "../FireBase";
 import Chessboard from "./chessboard";
 import { AuthUserContext } from "../Session";
 import Chat from "./chat";
+import draw from "../pictures/endgame/Draw.png";
+import drawOn from "../pictures/endgame/DrawOn.png";
+import resign from "../pictures/endgame/Resign.png";
 
 const Game = ({ authUser, match }) => (
   <div>
@@ -146,26 +149,26 @@ class GameWithUID extends Component {
   }
 
   guiDisplay = () => {
-    if(this.state.checkmate === "white"){
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>White wins!</h1>
+    if (this.state.checkmate === "white") {
+      return "White Wins!"
     }
-    else if(this.state.checkmate === "black"){
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Black wins!</h1>
+    else if (this.state.checkmate === "black") {
+      return "Black Wins!"
     }
-    else if(this.state.checkmate === "draw"){
-      return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Draw!</h1>
+    else if (this.state.checkmate === "draw") {
+      return "Draw!"
     }
 
     else {
       if (this.state.currentMover === "white") {
-        return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>White's turn</h1>
-      } 
+        return "White's Turn"
+      }
       else if (this.state.currentMover === "black") {
-        return <h1 style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>Blacks's turn</h1>
-      } 
+        return "Black's Turn"
+      }
     }
 
-    
+
   }
 
   onDraw = () => {
@@ -201,7 +204,7 @@ class GameWithUID extends Component {
 
   onResign = () => {
     if (this.props.uid === this.state.whiteId) {
-      if(this.state.checkmate === 0 && this.state.whiteId !== -1){
+      if (this.state.checkmate === 0 && this.state.whiteId !== -1) {
         this.checkmate.set("black");
         this.game.child("black_id_old").set(this.state.blackId);
         this.game.child("white_id_old").set(this.state.whiteId);
@@ -210,7 +213,7 @@ class GameWithUID extends Component {
       }
     }
     else {
-      if(this.state.checkmate === 0 && this.state.whiteId !== -1){
+      if (this.state.checkmate === 0 && this.state.whiteId !== -1) {
         this.checkmate.set("white");
         this.game.child("black_id_old").set(this.state.blackId);
         this.game.child("white_id_old").set(this.state.whiteId);
@@ -272,7 +275,6 @@ class GameWithUID extends Component {
 
   render() {
     let gameExists;
-    let winMenu;
     let moveLog = [];
     this.database.ref("games").once('value', snapshot => {
       if (snapshot.hasChild(this.state.gameId))
@@ -281,17 +283,6 @@ class GameWithUID extends Component {
         gameExists = false;
     })
     if (gameExists) {
-      if (this.state.checkmate !== 0) {
-        if (this.state.checkmate === "draw")
-          winMenu = <h1 class="kalyant-bold">Draw</h1>
-        else
-          winMenu =
-            this.state.checkmate === "white" ? (
-              < h1 class="kalyant-bold" > White Wins!</h1 >
-            ) : (
-                <h1 class="kalyant-bold">Black Wins!</h1>
-              );
-      }
       for (let i = 0; i < this.state.moveLog.length; i++) {
         moveLog.push(
           <tr>
@@ -301,34 +292,33 @@ class GameWithUID extends Component {
           </tr>
         )
       }
+      var drawButton = ((this.props.uid === this.state.whiteId && this.state.whiteDraw === 1) || (this.props.uid === this.state.blackId && this.state.blackDraw === 1)) ?
+        <div className="kalyant"><img src={drawOn} className="undraggable" alt="" style={{ height: 30, width: 30, marginLeft: "2vw" }} /> Draw (Requested) </div> :
+        <div className="kalyant"><img src={draw} className="undraggable" alt="" style={{ height: 30, width: 30, marginLeft: "2vw" }} /> Draw </div>;
     }
     let error = gameExists ? null : <h1>Loading... (if not loaded soon, game does not exist anymore)</h1>;
     return (
       <div className='main_content'>
         {error}
         {gameExists && this.state.loaded && <div>
-          <Chat
-            uid={this.props.uid}
-            whiteId={this.state.whiteId}
-            blackId={this.state.blackId}
-            gameId={this.props.gameId}
-          />
+
           <div class="row">
 
-            <div class="col-sm-5">
+            <div class="col-sm-5 chessboard">
               <Chessboard
                 uid={this.props.uid}
                 whiteId={this.state.whiteId}
                 blackId={this.state.blackId}
                 gameId={this.props.gameId}
                 indicatorMap={this.state.indicatorMap}
+                class="chessboard"
               />
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3 gui">
               <table style={{ width: '100%' }} >
                 <thead>
                   <tr>
-                    <th scope="col" class="kalyant-bold" style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>{this.guiDisplay()} PLACEHOLDER TURN</th>
+                    <th scope="col" class="kalyant-bold" style={{ width: 120, fontSize: 30, lineHeight: 3, paddingLeft: 10 }}>{this.guiDisplay()}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -346,17 +336,21 @@ class GameWithUID extends Component {
                       </tbody>
                     </table>
                   </tr>
-                  <tr>
-                    {winMenu}
-                  </tr>
                   <tr style={{ lineHeight: 3 }}>
-                    <td><button class="btn btn-primary" onClick={this.onResign}>Resign</button></td>
-                    <td><button class="btn btn-primary" onClick={this.onDraw}>Draw</button></td>
-                    <td><h5>White: {this.state.whiteDraw}/1</h5> <h5>Black: {this.state.blackDraw}/1</h5></td>
-                    <td><button class="btn btn-primary" onClick={this.resetBoard}>Rematch</button></td>
+                    <td className="buttonRow">
+                      <button class="guibuttons kalyant" onClick={this.onResign}><img src={resign} className="undraggable" alt="" style={{ height: 30, width: 30, marginLeft: "0.2vw" }} /> Resign </button>
+                      <button class="guibuttons" onClick={this.onDraw}>{drawButton}</button>
+                      {this.state.checkmate !== 0 && <button class="guibuttons kalyant" onClick={this.resetBoard} style={{ marginLeft: "2vw", fontSize: 20 }}>Rematch</button>}
+                    </td>
                   </tr>
                 </tbody>
               </table>
+              <Chat
+                uid={this.props.uid}
+                whiteId={this.state.whiteId}
+                blackId={this.state.blackId}
+                gameId={this.props.gameId}
+              />
             </div>
           </div>
         </div>}

@@ -23,7 +23,7 @@ import highlight_square from "../pictures/Indicators/highlight_square.png";
 import transparent_square from "../pictures/transparent.png";
 
 const Square = ({ isLight, onClick, coords, indicator, gameId, uid }) => (
-    isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid}/> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid}/>
+    isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid} /> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid} />
 )
 
 class LightSquare extends Component {
@@ -68,7 +68,7 @@ class LightSquare extends Component {
 
     async componentDidMount() {
         await this.database.ref("skins").once("value", (snap) => {
-            if(snap.hasChild(this.props.uid)){
+            if (snap.hasChild(this.props.uid)) {
                 this.setState({ customSquares: true })
             }
         })
@@ -77,9 +77,9 @@ class LightSquare extends Component {
                 piece: snap.val()
             });
         });
-        if(this.state.customSquares){
+        if (this.state.customSquares) {
             this.database.ref("skins/" + this.props.uid + "/board_colors").on("value", (snap) => {
-                this.setState({ selectedSquare: this.state.squareMap[snap.val()]});
+                this.setState({ selectedSquare: this.state.squareMap[snap.val()] });
             })
         }
     }
@@ -98,8 +98,8 @@ class LightSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                            <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator} alt="" />
+                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}>
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>
@@ -154,7 +154,7 @@ class DarkSquare extends Component {
 
     async componentDidMount() {
         await this.database.ref("skins").once("value", (snap) => {
-            if(snap.hasChild(this.props.uid)){
+            if (snap.hasChild(this.props.uid)) {
                 this.setState({ customSquares: true })
             }
         })
@@ -163,9 +163,9 @@ class DarkSquare extends Component {
                 piece: snap.val()
             });
         });
-        if(this.state.customSquares){
+        if (this.state.customSquares) {
             this.database.ref("skins/" + this.props.uid + "/board_colors").on("value", (snap) => {
-                this.setState({ selectedSquare: this.state.squareMap[snap.val()]});
+                this.setState({ selectedSquare: this.state.squareMap[snap.val()] });
             })
         }
     }
@@ -184,8 +184,8 @@ class DarkSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <ImageBackground source={this.state.pieceMap[this.state.piece]} style={this.styles.piece}>
-                            <img src={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator} alt="" />
+                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}>
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>

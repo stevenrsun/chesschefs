@@ -10,12 +10,12 @@ import startBlack from '../pictures/Modal/StartAsBlack.png'
 
 const Home = () => (
   <div>
-        <AuthUserContext.Consumer>
-            {(authUser) =>
-                authUser ? <HomeFinal uid={authUser.uid} /> : <HomeFinal uid={0} />
-            }
-        </AuthUserContext.Consumer>
-    </div>
+    <AuthUserContext.Consumer>
+      {(authUser) =>
+        authUser ? <HomeFinal uid={authUser.uid} /> : <HomeFinal uid={0} />
+      }
+    </AuthUserContext.Consumer>
+  </div>
 )
 
 class HomeBase extends Component {
@@ -119,7 +119,7 @@ class HomeBase extends Component {
   render() {
     let hover = this.state.hover ? <img src={spoons} className="undraggable spoons" alt="" /> : <img src={staticspoons} className="undraggable spoons" alt="" />;
     let modalBody = this.state.gameCreated ?
-      <div class="modal-body kalyant" style={{ fontSize: 30 }}>
+      <div class="modal-body kalyant" style={{ fontSize: 28 }}>
         Game created! <br />
         <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
       </div > :
