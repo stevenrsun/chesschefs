@@ -808,7 +808,7 @@ class ChessboardBase extends Component {
           );
     }
     let board = [];
-    if (this.props.uid === this.props.whiteId) {
+    if (this.props.uid === this.props.whiteId || this.props.uid === this.state.whiteIdOld) {
       for (let c = 0; c < this.state.board.length; c++) {
         let col = [];
         for (let r = 0; r < this.state.board.length; r++) {
