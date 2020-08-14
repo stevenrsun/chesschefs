@@ -86,15 +86,15 @@ class SettingsBase extends Component {
         let underTheSea = this.state.boardColor === 10 ? <img src={under_the_sea_icon} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={under_the_sea_icon} className="undraggable settingsIcon" alt="" />;
         let cherryBlossom = this.state.boardColor === 11 ? <img src={cherry_blossom_icon} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={cherry_blossom_icon} className="undraggable settingsIcon" alt="" />;
 
-        let orangeInd = this.state.indicatorColor === 0 ? <img src={orange_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={orange_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let blackInd = this.state.indicatorColor === 1 ? <img src={black_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={black_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let blueInd = this.state.indicatorColor === 2 ? <img src={blue_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={blue_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let greenInd = this.state.indicatorColor === 3 ? <img src={green_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={green_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let indigoInd = this.state.indicatorColor === 4 ? <img src={indigo_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={indigo_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let redInd = this.state.indicatorColor === 5 ? <img src={red_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={red_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let violetInd = this.state.indicatorColor === 6 ? <img src={violet_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={violet_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let whiteInd = this.state.indicatorColor === 7 ? <img src={white_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={white_selected_piece} className="undraggable settingsIcon" alt="" />;
-        let yellowInd = this.state.indicatorColor === 8 ? <img src={yellow_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={yellow_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let orangeInd = this.state.indicatorColor === 0 ? <img src={orange_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={orange_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let blackInd = this.state.indicatorColor === 1 ? <img src={black_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={black_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let blueInd = this.state.indicatorColor === 2 ? <img src={blue_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={blue_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let greenInd = this.state.indicatorColor === 3 ? <img src={green_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={green_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let indigoInd = this.state.indicatorColor === 4 ? <img src={indigo_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={indigo_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let redInd = this.state.indicatorColor === 5 ? <img src={red_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={red_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let violetInd = this.state.indicatorColor === 6 ? <img src={violet_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={violet_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let whiteInd = this.state.indicatorColor === 7 ? <img src={white_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={white_selected_piece} className="undraggable settingsIcon skin" alt="" />;
+        let yellowInd = this.state.indicatorColor === 8 ? <img src={yellow_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={yellow_selected_piece} className="undraggable settingsIcon skin" alt="" />;
 
         return (
             <div class="main_content">
