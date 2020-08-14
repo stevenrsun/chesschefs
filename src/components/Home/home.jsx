@@ -122,7 +122,7 @@ class HomeBase extends Component {
     let modalBody = this.state.gameCreated ?
       <div class="modal-body kalyant" style={{ fontSize: 28 }}>
         Game created! <br />
-        <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
+        <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[this.state.games.length - 1]}</a>
       </div > :
       <div class="modal-body">
         <div class='modal-div'>
