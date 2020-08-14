@@ -244,7 +244,7 @@ table {
 }
 
 .highlightedSkin {
-  border: 5px solid #555;
+  border: 5px solid rgb(199, 199, 199);
 }
 
 .settingsButton {
@@ -255,7 +255,7 @@ table {
 }
 
 .settingsButton:hover {
-  transform:scale(1.12);
+  transform:scale(1.05);
 }
 
 .settingsIcon {

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { withFirebase } from "../FireBase";
 import firebase from "firebase";
 import { AuthUserContext } from "../Session";
-import spoons from '../pictures/Home Screen/Spoon-Animation.gif'
-import staticspoons from '../pictures/Home Screen/Spoon-Static.png'
+import spoons from '../pictures/Home Screen/SpoonAnimationRevamp.gif'
+import staticspoons from '../pictures/Home Screen/SpoonStaticRevamp.png'
 import info from '../pictures/Home Screen/Info.png'
 import startWhite from '../pictures/Modal/StartAsWhite.png'
 import startBlack from '../pictures/Modal/StartAsBlack.png'
