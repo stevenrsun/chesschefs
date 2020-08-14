@@ -4,6 +4,7 @@ import firebase from "firebase";
 import { AuthUserContext } from "../Session";
 import spoons from '../pictures/Home Screen/SpoonAnimationRevamp.gif'
 import staticspoons from '../pictures/Home Screen/SpoonStaticRevamp.png'
+import spoonscrossed from '../pictures/Home Screen/SpoonsCrossed.png'
 import info from '../pictures/Home Screen/Info.png'
 import startWhite from '../pictures/Modal/StartAsWhite.png'
 import startBlack from '../pictures/Modal/StartAsBlack.png'
@@ -117,7 +118,7 @@ class HomeBase extends Component {
   }
 
   render() {
-    let hover = this.state.hover ? <img src={spoons} className="undraggable spoons" alt="" /> : <img src={staticspoons} className="undraggable spoons" alt="" />;
+    let hover = this.state.hover ? <img src={spoonscrossed} className="undraggable spoons" alt="" /> : <img src={staticspoons} className="undraggable spoons" alt="" />;
     let modalBody = this.state.gameCreated ?
       <div class="modal-body kalyant" style={{ fontSize: 28 }}>
         Game created! <br />

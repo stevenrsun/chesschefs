@@ -73,7 +73,7 @@ class SettingsBase extends Component {
                 {this.state.loaded &&
                     <div>
                         <div class="row">
-                            <h1 class="kalyant-bold" style={{ fontSize: 50 }}>Choose your board color scheme:</h1>
+                            <h1 class="kalyant-bold" style={{ fontSize: 50 }}>Color Schemes</h1>
                             <button class="settingsButton" onClick={() => this.onChangeBoardColor(0)}>{defaultSkin}</button>
                             <button class="settingsButton" onClick={() => this.onChangeBoardColor(1)}>{classicGreen}</button>
                             <button class="settingsButton" onClick={() => this.onChangeBoardColor(2)}>{classicBlue}</button>
