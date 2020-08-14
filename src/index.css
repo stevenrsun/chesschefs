@@ -101,19 +101,8 @@ label {
   padding: 16px;
 }
 
-button[type="submit"] {
-  background-color: #ffffff;
-  margin-top: 20px;
-  color: white;
-  padding: 14px 20px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  background-image: linear-gradient(rgb(128, 128, 128), rgb(145, 145, 145));
-}
-
 button:hover {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .wrapper{
@@ -251,5 +240,24 @@ table {
 }
 
 .settings:hover {
-  transform: scale(1.2);
+  transform: scale(1.12);
+}
+
+.highlightedSkin {
+  border: 5px solid #555;
+}
+
+.settingsButton {
+  background-color:#ffffff;
+  background: none;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.settingsButton:hover {
+  transform:scale(1.12);
+}
+
+.settingsIcon {
+  width: 15vw;
 }

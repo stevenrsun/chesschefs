@@ -22,6 +22,32 @@ import red_square from "../pictures/Indicators/red_square.png";
 import highlight_square from "../pictures/Indicators/highlight_square.gif";
 import transparent_square from "../pictures/transparent.png";
 
+import default_light_square from "../pictures/Skins/Squares/Default/light_square.png"
+import classic_green_light_square from "../pictures/Skins/Squares/Classic Green/light_square.png"
+import classic_red_light_square from "../pictures/Skins/Squares/Classic Red/light_square.png"
+import classic_blue_light_square from "../pictures/Skins/Squares/Classic Blue/light_square.png"
+import chess_chefs_light_square from "../pictures/Skins/Squares/Chess Chefs/light_square.png"
+import christmas_light_square from "../pictures/Skins/Squares/Christmas/light_square.png"
+import miami_vice_light_square from "../pictures/Skins/Squares/Miami Vice/light_square.png"
+import mint_light_square from "../pictures/Skins/Squares/Mint/light_square.png"
+import pomegranate_light_square from "../pictures/Skins/Squares/Pomegranate/light_square.png"
+import texas_fight_light_square from "../pictures/Skins/Squares/Texas Fight/light_square.png"
+import under_the_sea_light_square from "../pictures/Skins/Squares/Under the Sea/light_square.png"
+import cherry_blossom_light_square from "../pictures/Skins/Squares/Cherry Blossom/light_square.png"
+
+import default_dark_square from "../pictures/Skins/Squares/Default/dark_square.png"
+import classic_green_dark_square from "../pictures/Skins/Squares/Classic Green/dark_square.png"
+import classic_red_dark_square from "../pictures/Skins/Squares/Classic Red/dark_square.png"
+import classic_blue_dark_square from "../pictures/Skins/Squares/Classic Blue/dark_square.png"
+import chess_chefs_dark_square from "../pictures/Skins/Squares/Chess Chefs/dark_square.png"
+import christmas_dark_square from "../pictures/Skins/Squares/Christmas/dark_square.png"
+import miami_vice_dark_square from "../pictures/Skins/Squares/Miami Vice/dark_square.png"
+import mint_dark_square from "../pictures/Skins/Squares/Mint/dark_square.png"
+import pomegranate_dark_square from "../pictures/Skins/Squares/Pomegranate/dark_square.png"
+import texas_fight_dark_square from "../pictures/Skins/Squares/Texas Fight/dark_square.png"
+import under_the_sea_dark_square from "../pictures/Skins/Squares/Under the Sea/dark_square.png"
+import cherry_blossom_dark_square from "../pictures/Skins/Squares/Cherry Blossom/dark_square.png"
+
 const Square = ({ isLight, onClick, coords, indicator, gameId, uid }) => (
     isLight ? <LightSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid} /> : <DarkSquareFinal onClick={onClick} coords={coords} indicator={indicator} gameId={gameId} uid={uid} />
 )
@@ -36,8 +62,11 @@ class LightSquare extends Component {
         this.state = {
             customSquares: false,
             piece: 0,
-            squareMap: [light_square, gray_square],
-            selectedSquare: light_square,
+            squareMap: [default_light_square, classic_green_light_square, classic_blue_light_square, classic_red_light_square,
+                chess_chefs_light_square, christmas_light_square, miami_vice_light_square, mint_light_square,
+                pomegranate_light_square, texas_fight_light_square, under_the_sea_light_square, cherry_blossom_light_square],
+
+            selectedSquare: default_light_square,
             indicatorMap: [transparent_square, green_dot, red_square, highlight_square],
             pieceMap: [transparent_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
@@ -90,7 +119,7 @@ class LightSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" class="undraggable" />
                     </ImageBackground>
                 </View>
         }
@@ -98,8 +127,8 @@ class LightSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicato}>
-                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" />
+                        <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.indicator}>
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" class="undraggable" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>
@@ -122,8 +151,10 @@ class DarkSquare extends Component {
         this.state = {
             customSquares: false,
             piece: 0,
-            selectedSquare: dark_square,
-            squareMap: [dark_square, dark_gray_square],
+            selectedSquare: default_dark_square,
+            squareMap: [default_dark_square, classic_green_dark_square, classic_blue_dark_square, classic_red_dark_square,
+                chess_chefs_dark_square, christmas_dark_square, miami_vice_dark_square, mint_dark_square,
+                pomegranate_dark_square, texas_fight_dark_square, under_the_sea_dark_square, cherry_blossom_dark_square],
             indicatorMap: [transparent_square, green_dot, red_square, highlight_square],
             pieceMap: [transparent_square, white_pawn, white_knight, white_bishop, white_rook, white_queen, white_king, black_pawn, black_knight, black_bishop, black_rook, black_queen, black_king]
         }
@@ -176,7 +207,7 @@ class DarkSquare extends Component {
             square =
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
-                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" />
+                        <img src={this.state.pieceMap[this.state.piece]} style={this.styles.piece} alt="" class="undraggable" />
                     </ImageBackground>
                 </View>
         }
@@ -185,7 +216,7 @@ class DarkSquare extends Component {
                 <View style={this.styles.container}>
                     <ImageBackground source={this.state.selectedSquare} style={this.styles.image}>
                         <ImageBackground source={this.state.indicatorMap[this.props.indicator]} style={this.styles.piece}>
-                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" />
+                            <img src={this.state.pieceMap[this.state.piece]} style={this.styles.indicator} alt="" class="undraggable" />
                         </ImageBackground>
                     </ImageBackground>
                 </View>
