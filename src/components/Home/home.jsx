@@ -120,7 +120,7 @@ class HomeBase extends Component {
   render() {
     let hover = this.state.hover ? <img src={spoonscrossed} className="undraggable spoons" alt="" /> : <img src={staticspoons} className="undraggable spoons" alt="" />;
     let modalBody = this.state.gameCreated ?
-      <div class="modal-body kalyant" style={{ fontSize: 28 }}>
+      <div class="modal-body kalyant" style={{ fontSize: 26 }}>
         Game created! <br />
         <a href={window.location.href + "game/" + this.state.games[this.state.games.length - 1]} onclick="$('#myModal').modal('hide')">{window.location.href + "game/" + this.state.games[0]}</a>
       </div > :
