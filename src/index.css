@@ -150,6 +150,7 @@ button:hover {
 .info {
   padding-top: 5.5vw;
   margin-left: 4.5vw;
+  width: 75vw
 }
 
 .modal-body .startButton {

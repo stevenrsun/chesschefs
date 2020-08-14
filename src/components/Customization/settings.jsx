@@ -15,6 +15,17 @@ import texas_fight_icon from "../pictures/Skins/Squares/Texas Fight/icon.png"
 import under_the_sea_icon from "../pictures/Skins/Squares/Under the Sea/icon.png"
 import cherry_blossom_icon from "../pictures/Skins/Squares/Cherry Blossom/icon.png"
 
+import orange_selected_piece from "../pictures/Skins/Indicators/Orange/valid_move.png"
+import black_selected_piece from "../pictures/Skins/Indicators/Black/valid_move.png"
+import blue_selected_piece from "../pictures/Skins/Indicators/Blue/valid_move.png"
+import green_selected_piece from "../pictures/Skins/Indicators/Green/valid_move.png"
+import indigo_selected_piece from "../pictures/Skins/Indicators/Indigo/valid_move.png"
+import red_selected_piece from "../pictures/Skins/Indicators/Red/valid_move.png"
+import violet_selected_piece from "../pictures/Skins/Indicators/Violet/valid_move.png"
+import white_selected_piece from "../pictures/Skins/Indicators/White/valid_move.png"
+import yellow_selected_piece from "../pictures/Skins/Indicators/Yellow/valid_move.png"
+
+
 const Settings = () => (
     <div>
         <AuthUserContext.Consumer>
@@ -35,7 +46,8 @@ class SettingsBase extends Component {
         this.state = {
             loaded: false,
 
-            boardColor: 0
+            boardColor: 0,
+            indicatorColor: 0
         }
     }
 
@@ -46,11 +58,18 @@ class SettingsBase extends Component {
         this.skins.child(this.props.uid + "/board_colors").on("value", (snap) => {
             this.setState({ boardColor: snap.val() });
         })
+        this.skins.child(this.props.uid + "/indicator_colors").on("value", (snap) => {
+            this.setState({ indicatorColor: snap.val() });
+        })
         this.setState({ loaded: true })
     }
 
     onChangeBoardColor = (id) => {
         this.skins.child(this.props.uid + "/board_colors").set(id);
+    }
+
+    onChangeIndicatorColor = (id) => {
+        this.skins.child(this.props.uid + "/indicator_colors").set(id);
     }
 
     render() {
@@ -66,6 +85,16 @@ class SettingsBase extends Component {
         let texasFight = this.state.boardColor === 9 ? <img src={texas_fight_icon} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={texas_fight_icon} className="undraggable settingsIcon" alt="" />;
         let underTheSea = this.state.boardColor === 10 ? <img src={under_the_sea_icon} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={under_the_sea_icon} className="undraggable settingsIcon" alt="" />;
         let cherryBlossom = this.state.boardColor === 11 ? <img src={cherry_blossom_icon} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={cherry_blossom_icon} className="undraggable settingsIcon" alt="" />;
+
+        let orangeInd = this.state.indicatorColor === 0 ? <img src={orange_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={orange_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let blackInd = this.state.indicatorColor === 1 ? <img src={black_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={black_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let blueInd = this.state.indicatorColor === 2 ? <img src={blue_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={blue_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let greenInd = this.state.indicatorColor === 3 ? <img src={green_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={green_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let indigoInd = this.state.indicatorColor === 4 ? <img src={indigo_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={indigo_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let redInd = this.state.indicatorColor === 5 ? <img src={red_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={red_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let violetInd = this.state.indicatorColor === 6 ? <img src={violet_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={violet_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let whiteInd = this.state.indicatorColor === 7 ? <img src={white_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={white_selected_piece} className="undraggable settingsIcon" alt="" />;
+        let yellowInd = this.state.indicatorColor === 8 ? <img src={yellow_selected_piece} className="undraggable settingsIcon highlightedSkin" alt="" /> : <img src={yellow_selected_piece} className="undraggable settingsIcon" alt="" />;
 
         return (
             <div class="main_content">
@@ -91,7 +120,22 @@ class SettingsBase extends Component {
                             <button class="settingsButton" onClick={() => this.onChangeBoardColor(10)}>{underTheSea}</button>
                             <button class="settingsButton" onClick={() => this.onChangeBoardColor(11)}>{cherryBlossom}</button>
                         </div>
-                        <h1 class="kalyant">{this.state.boardColor}</h1>
+                        <div class="row">
+                            <h1 class="kalyant-bold" style={{ fontSize: 50 }}>Move Indicators</h1>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(0)}>{orangeInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(1)}>{blackInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(2)}>{blueInd}</button>
+                        </div>
+                        <div class="row">
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(3)}>{greenInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(4)}>{indigoInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(5)}>{redInd}</button>
+                        </div>
+                        <div class="row">
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(6)}>{violetInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(7)}>{whiteInd}</button>
+                            <button class="settingsButton" onClick={() => this.onChangeIndicatorColor(8)}>{yellowInd}</button>
+                        </div>
                     </div>}
             </div>
         );
