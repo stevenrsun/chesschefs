@@ -49,6 +49,7 @@ class HomeBase extends Component {
 
   createGameWhite = async () => {
     await this.games.push({
+      timestamp: Date.now(),
       color_pref: "white",
       checkmate: 0,
       white_king: "7 4",
@@ -80,11 +81,19 @@ class HomeBase extends Component {
       black_draw: 0,
       white_draw: 0
     });
+    var ref = this.database.ref('/games');
+    var now = Date.now();
+    var cutoff = now - 12 * 60 * 60 * 1000;
+    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    var listener = old.on('child_added', function(snapshot) {
+        snapshot.ref.remove();
+    });
     this.setState({ gameCreated: true });
   }
 
   createGameBlack = async () => {
     await this.games.push({
+      timestamp: Date.now(),
       color_pref: "black",
       checkmate: 0,
       white_king: "7 4",
@@ -113,6 +122,13 @@ class HomeBase extends Component {
       move_log: [[" ", " "]],
       move_num: 0,
       pawn_two_forward: -1
+    });
+    var ref = this.database.ref('/games');
+    var now = Date.now();
+    var cutoff = now - 12 * 60 * 60 * 1000;
+    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    var listener = old.on('child_added', function(snapshot) {
+        snapshot.ref.remove();
     });
     this.setState({ gameCreated: true });
   }
