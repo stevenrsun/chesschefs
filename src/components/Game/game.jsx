@@ -160,10 +160,10 @@ class GameWithUID extends Component {
     }
 
     else {
-      if (this.state.currentMover === "white") {
+      if (this.state.currentMover === "white" || this.state.currentMover === "white_promo_pending") {
         return "White's Turn"
       }
-      else if (this.state.currentMover === "black") {
+      else if (this.state.currentMover === "black" || this.state.currentMover === "black_promo_pending") {
         return "Black's Turn"
       }
     }

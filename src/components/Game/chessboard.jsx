@@ -252,11 +252,13 @@ class ChessboardBase extends Component {
     this.promoMenuDb.set(true);
   };
 
-  onPromotionMenuClick = (piece, e, coords) => {
+  onPromotionMenuClick = (piece, e, mover) => {
     e.preventDefault();
-    this.setState({ promotedPiece: piece });
-    this.promoMenuDb.set(false);
-    this.onPromotePiece();
+    if(this.props.uid === mover) {
+      this.setState({ promotedPiece: piece });
+      this.promoMenuDb.set(false);
+      this.onPromotePiece();
+    }
   };
 
   onPromotePiece = async () => {
@@ -802,9 +804,9 @@ class ChessboardBase extends Component {
     if (this.state.promoMenu) {
       promoMenu =
         this.state.currentMover === "white_promo_pending" ? (
-          <PromoMenu color={"white"} onClick={this.onPromotionMenuClick} />
+          <PromoMenu color={"white"} mover={this.props.whiteId} onClick={this.onPromotionMenuClick} />
         ) : (
-            <PromoMenu color={"black"} onClick={this.onPromotionMenuClick} />
+            <PromoMenu color={"black"} mover={this.props.blackId} onClick={this.onPromotionMenuClick} />
           );
     }
     let board = [];

@@ -222,11 +222,12 @@ table {
 
 .gui {
   padding-top: 7vh;
+  margin-left: 3vw;
 }
 
 .chessboard {
   padding-top: 5vh;
-  margin-left: 10vw;
+  margin-left: 8vw;
 }
 
 .chat {
